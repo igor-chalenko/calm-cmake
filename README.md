@@ -1,2 +1,4 @@
 # calm-cmake
-A CMake project template that keeps me calm
+A CMake project template that keeps me calm.
+
+UNDER CONSTRUCTION
