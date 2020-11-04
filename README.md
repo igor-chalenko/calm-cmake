@@ -47,5 +47,5 @@ UNDER CONSTRUCTION
 Third-party packages included
 -----------------------------
 
-* [Sanitizers](https://github.com/arsenm/sanitizers-cmake)
+* [sanitizers-cmake](https://github.com/arsenm/sanitizers-cmake)
 
