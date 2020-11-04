@@ -43,3 +43,9 @@ Usage examples
 --------------
 
 UNDER CONSTRUCTION
+
+Third-party packages included
+-----------------------------
+
+* [Sanitizers](https://github.com/arsenm/sanitizers-cmake)
+
