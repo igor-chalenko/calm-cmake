@@ -1,0 +1,5 @@
+if (NOT TARGET GTest::gtest_main)
+    add_library(gtest_main_imported INTERFACE IMPORTED GLOBAL)
+    add_library(GTest::gtest_main ALIAS gtest_main_imported)
+    target_link_libraries(gtest_main_imported INTERFACE gtest_main)
+endif()
