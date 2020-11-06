@@ -121,6 +121,7 @@ function(_install_library _target _namespace)
     endforeach()
     _amend_link_libraries(${_target} "${_dependencies}")
 
+    message(STATUS "install ${_target} and ${_targets}...")
     install(TARGETS ${_target} ${_targets}
             EXPORT "${_target_export_name}"
             PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${_target}
