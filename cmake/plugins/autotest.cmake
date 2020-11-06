@@ -3,7 +3,7 @@ set(calm_ROOT_TEST_TARGET "all_tests"
 
 function(_plugin_autotest_manifest)
     _calm_plugin_manifest(autotest
-            TARGET_TYPES build
+            TARGET_TYPES main
             REQUIRED
             DESCRIPTION [=[
 This plugin scans files in the subdirectory `test` of the current project

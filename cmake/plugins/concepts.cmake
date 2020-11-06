@@ -80,12 +80,22 @@ function(_plugin_concepts_init)
 endfunction()
 
 function(_plugin_concepts_apply _target)
-    set_target_properties(${_target}
-            PROPERTIES
-            CXX_STANDARD 20
-            CXX_STANDARD_REQUIRED YES
-            CXX_EXTENSIONS NO
-            )
+    get_target_property(_type ${_target} TYPE)
+    if (${_type} STREQUAL INTERFACE_LIBRARY)
+        set_target_properties(${_target}
+                PROPERTIES
+                INTERFACE_CXX_STANDARD 20
+                INTERFACE_CXX_STANDARD_REQUIRED YES
+                INTERFACE_CXX_EXTENSIONS NO
+                )
+    else()
+        set_target_properties(${_target}
+                PROPERTIES
+                CXX_STANDARD 20
+                CXX_STANDARD_REQUIRED YES
+                CXX_EXTENSIONS NO
+                )
+    endif ()
 endfunction()
 
 function(_plugin_concepts_apply_2 _target)
