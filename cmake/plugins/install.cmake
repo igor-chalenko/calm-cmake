@@ -49,7 +49,6 @@ function(_plugin_install_apply _target)
         include(GNUInstallDirs)
     endif ()
 
-    message("checking if can install ${_type} ${_target}")
     if(${_type} MATCHES "(.*)_LIBRARY")
         _install_library(${_target} ${_namespace})
     endif()
@@ -121,7 +120,6 @@ function(_install_library _target _namespace)
     endforeach()
     _amend_link_libraries(${_target} "${_dependencies}")
 
-    message(STATUS "install ${_target} and ${_targets}...")
     install(TARGETS ${_target} ${_targets}
             EXPORT "${_target_export_name}"
             PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${_target}
