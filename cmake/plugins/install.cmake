@@ -49,6 +49,7 @@ function(_plugin_install_apply _target)
         include(GNUInstallDirs)
     endif ()
 
+    message("checking if can install ${_type} ${_target}")
     if(${_type} MATCHES "(.*)_LIBRARY")
         _install_library(${_target} ${_namespace})
     endif()
