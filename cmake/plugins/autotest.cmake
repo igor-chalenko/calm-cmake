@@ -4,6 +4,7 @@ set(calm_ROOT_TEST_TARGET "all_tests"
 function(_plugin_autotest_manifest)
     _calm_plugin_manifest(autotest
             TARGET_TYPES main
+            PARAMETERS TEST_SOURCES
             REQUIRED
             DESCRIPTION [=[
 This plugin scans files in the subdirectory `test` of the current project
@@ -17,10 +18,21 @@ function(_plugin_autotest_init)
             COMMENT "Build and run all the tests.")
 endfunction()
 
-function(_plugin_autotest_apply _target)
+function(_plugin_autotest_apply _target _test_sources)
     TPA_get("target.args.${_target}" _args)
     message(STATUS "Configure ${_target}.test same as ${_target}: ${_args}")
-    _calm_tests(${_target} "test/*.cc" ${_args})
+    if (_test_sources)
+        _calm_tests(${_target} "test/*.cc" ${_args})
+    elseif (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/test")
+        _calm_tests(${_target} "test/*.cc" ${_args})
+    elseif (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/tests")
+        _calm_tests(${_target} "tests/*.cc" ${_args})
+    else()
+        message(WARNING [[
+No `test` or `tests` directories found, auto-tests not created. Use
+`TEST_SOURCES <directory>` to specify a non-default directory.
+]])
+    endif()
 endfunction()
 
 function(_calm_tests _for_target _sources)
