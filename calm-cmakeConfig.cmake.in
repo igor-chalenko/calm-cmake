@@ -1,7 +1,7 @@
 @PACKAGE_INIT@
 
 get_filename_component(calm_cmake_dir ${CMAKE_CURRENT_LIST_FILE} PATH)
-set_and_check(DOXYPRESS_CMAKE_MODULE_DIR "${calm_cmake_dir}")
+set_and_check(CALM_CMAKE_MODULE_DIR "${calm_cmake_dir}")
 list(APPEND CALM_CMAKE_MODULE_PATH "${CALM_CMAKE_MODULE_DIR}")
 list(APPEND CMAKE_MODULE_PATH "${CALM_CMAKE_MODULE_PATH}")
 include(${CALM_CMAKE_MODULE_DIR}/Bootstrap.cmake)
