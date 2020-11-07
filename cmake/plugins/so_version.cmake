@@ -12,9 +12,16 @@ endfunction()
 
 function(_plugin_so_version_apply _target)
     # todo better versions!
-    if (BUILD_SHARED_LIBS)
-        set_target_properties(${_target} PROPERTIES
+    get_target_property(_type ${_target} PROPERTY TYPE)
+    if (_type MATCHES "(.*)_LIBRARY")
+        if (_type STREQUAL INTERFACE_LIBRARY)
+            set_target_properties(${_target} PROPERTIES
+                        INTERFACE_VERSION ${PROJECT_VERSION}
+                        INTERFACE_SOVERSION ${PROJECT_VERSION})
+        else()
+            set_target_properties(${_target} PROPERTIES
                     VERSION ${PROJECT_VERSION}
                     SOVERSION ${PROJECT_VERSION})
+        endif()
     endif()
 endfunction()
