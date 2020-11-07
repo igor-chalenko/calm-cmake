@@ -44,7 +44,7 @@ cmake_policy(SET CMP0057 NEW)
 # library file at some known location.
 ###############################################################################
 macro(calm_add_library _name)
-    if (INTERFACE STREQUAL ${ARGV1})
+    if (INTERFACE STREQUAL "${ARGV1}")
         _calm_add_target(${_name} INTERFACE ${ARGN})
     else ()
         _calm_add_target(${_name} LIB ${ARGN})
