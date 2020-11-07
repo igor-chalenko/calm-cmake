@@ -55,6 +55,7 @@ function(_calm_tests _for_target _sources)
 
     # each found file is a separate test
     _calm_get_test_dependencies(_test_dependencies)
+    message(STATUS "_test_dependencies = ${_test_dependencies}")
 
     foreach (_file IN LISTS TESTS)
         _calm_test_name_for_file(${_file} ${_target_prefix} _target)

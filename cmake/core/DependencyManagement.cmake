@@ -81,7 +81,7 @@ endfunction()
 #
 ###############################################################################
 function(calm_test_dependencies)
-    TPA_set(dependencies.test "${ARGN}")
+    TPA_append(dependencies.test "${ARGN}")
 endfunction()
 
 ###############################################################################
