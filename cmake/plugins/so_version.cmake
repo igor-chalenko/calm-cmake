@@ -12,7 +12,7 @@ endfunction()
 
 function(_plugin_so_version_apply _target)
     # todo better versions!
-    get_target_property(_type ${_target} PROPERTY TYPE)
+    get_target_property(_type ${_target} TYPE)
     if (_type MATCHES "(.*)_LIBRARY")
         if (_type STREQUAL INTERFACE_LIBRARY)
             set_target_properties(${_target} PROPERTIES
