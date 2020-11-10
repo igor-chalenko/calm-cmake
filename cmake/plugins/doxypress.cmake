@@ -1,5 +1,5 @@
 function(_plugin_doxypress_manifest)
-    _calm_plugin_manifest(doxypress
+    _calm_plugin_manifest(DoxypressCMake
             TARGET_TYPES build
             CPM_ARGUMENTS
                 GITHUB_REPOSITORY igor-chalenko/doxypress-cmake
@@ -11,8 +11,7 @@ function(_plugin_doxypress_manifest)
 endfunction()
 
 function(_plugin_doxypress_init)
-    _calm_set_cpm_arguments(DoxypressCMake GITHUB_REPOSITORY igor-chalenko/doxypress-cmake GIT_TAG master)
-    _calm_find_package(DoxypressCMake REQUIRED)
+    _calm_find_package(DoxypressCMake master REQUIRED)
 endfunction()
 
 function(_plugin_doxypress_apply _target)
