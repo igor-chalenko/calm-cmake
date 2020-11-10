@@ -1,0 +1,16 @@
+get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
+if (NOT TARGET boost_system)
+    include(${_current_dir}/build-modules/Boost/config.cmake)
+    include(${_current_dir}/build-modules/Boost/winapi.cmake)
+
+    project(boost_system VERSION 1.74.0)
+    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS system)
+
+    bcm_setup_version(VERSION 1.74.0)
+    add_library(boost_system INTERFACE)
+    add_library(Boost::system ALIAS boost_system)
+    set_property(TARGET boost_system PROPERTY EXPORT_NAME system)
+    target_link_libraries(boost_system INTERFACE Boost::config)
+    target_link_libraries(boost_system INTERFACE Boost::winapi)
+    bcm_deploy(TARGETS boost_system INCLUDE include NAMESPACE Boost::)
+endif()
