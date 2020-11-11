@@ -23,5 +23,5 @@ if (NOT TARGET boost_tti)
     target_link_libraries(boost_tti INTERFACE Boost::preprocessor)
     target_link_libraries(boost_tti INTERFACE Boost::config)
     
-    bcm_deploy(TARGETS boost_tti INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_tti INCLUDE ${boost_tti_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()

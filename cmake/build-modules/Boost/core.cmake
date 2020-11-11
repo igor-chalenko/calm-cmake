@@ -1,4 +1,3 @@
-#get_filename_component(_current_dir ${CMAKE_CURRENT_LIST_FILE} PATH)
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 
 if (NOT TARGET boost_core)
@@ -15,6 +14,6 @@ if (NOT TARGET boost_core)
     set_property(TARGET boost_core PROPERTY EXPORT_NAME core)
     target_link_libraries(boost_core INTERFACE Boost::config)
     target_link_libraries(boost_core INTERFACE Boost::assert)
-    bcm_deploy(TARGETS boost_core INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_core INCLUDE ${boost_core_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
 

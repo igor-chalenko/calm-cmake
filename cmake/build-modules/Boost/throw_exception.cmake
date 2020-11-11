@@ -14,6 +14,6 @@ if (NOT TARGET boost_throw_exception)
     set_property(TARGET boost_throw_exception PROPERTY EXPORT_NAME throw_exception)
     target_link_libraries(boost_throw_exception INTERFACE Boost::assert)
     target_link_libraries(boost_throw_exception INTERFACE Boost::config)
-    bcm_deploy(TARGETS boost_throw_exception INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_throw_exception INCLUDE ${boost_throw_exception_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
 

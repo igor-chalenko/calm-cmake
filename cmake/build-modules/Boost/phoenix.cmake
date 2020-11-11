@@ -1,9 +1,6 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 
 if (NOT TARGET boost_phoenix)
-    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS phoenix)
-
-    bcm_setup_version(VERSION 1.74.0)
     add_library(boost_phoenix INTERFACE)
 
     include(${_current_dir}/build-modules/Boost/function.cmake)
@@ -23,6 +20,9 @@ if (NOT TARGET boost_phoenix)
     include(${_current_dir}/build-modules/Boost/utility.cmake)
 
     project(boost_phoenix VERSION 1.74.0)
+    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS phoenix)
+    bcm_setup_version(VERSION 1.74.0)
+
     add_library(Boost::phoenix ALIAS boost_phoenix)
     set_property(TARGET boost_phoenix PROPERTY EXPORT_NAME phoenix)
 
@@ -41,5 +41,5 @@ if (NOT TARGET boost_phoenix)
     target_link_libraries(boost_phoenix INTERFACE Boost::preprocessor)
     target_link_libraries(boost_phoenix INTERFACE Boost::config)
     target_link_libraries(boost_phoenix INTERFACE Boost::utility)
-    bcm_deploy(TARGETS boost_phoenix INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_phoenix INCLUDE ${boost_phoenix_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()

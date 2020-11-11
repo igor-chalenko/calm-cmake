@@ -22,7 +22,7 @@ if (NOT TARGET boost_utility)
     target_link_libraries(boost_utility INTERFACE Boost::static_assert)
     target_link_libraries(boost_utility INTERFACE Boost::throw_exception)
     target_link_libraries(boost_utility INTERFACE Boost::type_traits)
-    bcm_deploy(TARGETS boost_utility INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_utility INCLUDE ${boost_utility_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
 
 

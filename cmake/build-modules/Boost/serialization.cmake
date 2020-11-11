@@ -1,8 +1,6 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 
 if (NOT TARGET boost_serialization)
-    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS serialization)
-
     add_library(boost_serialization INTERFACE)
 
     include(${_current_dir}/build-modules/Boost/predef.cmake)
@@ -28,6 +26,7 @@ if (NOT TARGET boost_serialization)
     include(${_current_dir}/build-modules/Boost/spirit.cmake)
     
     project(boost_serialization VERSION 1.74.0)
+    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS serialization)
     bcm_setup_version(VERSION 1.74.0)
     add_library(Boost::serialization ALIAS boost_serialization)
     set_property(TARGET boost_serialization PROPERTY EXPORT_NAME serialization)
@@ -53,5 +52,5 @@ if (NOT TARGET boost_serialization)
     target_link_libraries(boost_serialization INTERFACE Boost::integer)
     target_link_libraries(boost_serialization INTERFACE Boost::optional)
     target_link_libraries(boost_serialization INTERFACE Boost::spirit)
-    bcm_deploy(TARGETS boost_serialization INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_serialization INCLUDE ${boost_serialization_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()

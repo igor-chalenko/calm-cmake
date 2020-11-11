@@ -1,6 +1,8 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 
 if (NOT TARGET boost_functional)
+    add_library(boost_functional INTERFACE)
+
     include(${_current_dir}/build-modules/Boost/config.cmake)
     include(${_current_dir}/build-modules/Boost/function.cmake)
     include(${_current_dir}/build-modules/Boost/core.cmake)
@@ -21,7 +23,6 @@ if (NOT TARGET boost_functional)
     _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS functional)
 
     bcm_setup_version(VERSION 1.74.0)
-    add_library(boost_functional INTERFACE)
     add_library(Boost::functional ALIAS boost_functional)
     set_property(TARGET boost_functional PROPERTY EXPORT_NAME functional)
     target_link_libraries(boost_functional INTERFACE Boost::config)
@@ -38,5 +39,5 @@ if (NOT TARGET boost_functional)
     target_link_libraries(boost_functional INTERFACE Boost::preprocessor)
     target_link_libraries(boost_functional INTERFACE Boost::integer)
     target_link_libraries(boost_functional INTERFACE Boost::utility)
-    bcm_deploy(TARGETS boost_functional INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_functional INCLUDE ${boost_functional_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()

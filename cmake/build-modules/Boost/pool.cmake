@@ -24,6 +24,6 @@ if (NOT TARGET boost_pool)
     target_link_libraries(boost_pool INTERFACE Boost::config)
     target_link_libraries(boost_pool INTERFACE Boost::throw_exception)
 
-    bcm_deploy(TARGETS boost_pool INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_pool INCLUDE ${boost_pool_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
 

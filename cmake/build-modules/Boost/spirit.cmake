@@ -1,8 +1,6 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 
 if (NOT TARGET boost_spirit)
-    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS spirit)
-
     add_library(boost_spirit INTERFACE)
 
     include(${_current_dir}/build-modules/Boost/predef.cmake)
@@ -46,6 +44,8 @@ if (NOT TARGET boost_spirit)
     include(${_current_dir}/build-modules/Boost/throw_exception.cmake)
 
     project(boost_spirit VERSION 1.74.0)
+    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS spirit)
+
     bcm_setup_version(VERSION 1.74.0)
 
     add_library(Boost::spirit ALIAS boost_spirit)
@@ -90,5 +90,5 @@ if (NOT TARGET boost_spirit)
     target_link_libraries(boost_spirit INTERFACE Boost::endian)
     target_link_libraries(boost_spirit INTERFACE Boost::lexical_cast)
     target_link_libraries(boost_spirit INTERFACE Boost::throw_exception)
-    bcm_deploy(TARGETS boost_spirit INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_spirit INCLUDE ${boost_spirit_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()

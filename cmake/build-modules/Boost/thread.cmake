@@ -1,24 +1,6 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 
 if (NOT TARGET Boost::thread)
-    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS thread)
-    add_library(boost_thread
-            ${boost_thread_SOURCE_DIR}/src/future.cpp
-            ${boost_thread_SOURCE_DIR}/src/tss_null.cpp
-            )
-    if(WIN32)
-        target_sources(boost_thread PRIVATE
-                ${boost_thread_SOURCE_DIR}/src/win32/thread.cpp
-                ${boost_thread_SOURCE_DIR}/src/win32/tss_dll.cpp
-                ${boost_thread_SOURCE_DIR}/src/win32/tss_pe.cpp
-                )
-    else()
-        target_sources(boost_thread PRIVATE
-                ${boost_thread_SOURCE_DIR}/src/pthread/thread.cpp
-                ${boost_thread_SOURCE_DIR}/src/pthread/once.cpp
-                )
-    endif()
-
     include(${_current_dir}/build-modules/Boost/config.cmake)
     include(${_current_dir}/build-modules/Boost/predef.cmake)
     include(${_current_dir}/build-modules/Boost/move.cmake)
@@ -49,6 +31,23 @@ if (NOT TARGET Boost::thread)
     include(${_current_dir}/build-modules/Boost/throw_exception.cmake)
 
     project(boost_thread VERSION 1.74.0)
+    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS thread)
+    add_library(boost_thread
+            ${boost_thread_SOURCE_DIR}/src/future.cpp
+            ${boost_thread_SOURCE_DIR}/src/tss_null.cpp
+            )
+    if(WIN32)
+        target_sources(boost_thread PRIVATE
+                ${boost_thread_SOURCE_DIR}/src/win32/thread.cpp
+                ${boost_thread_SOURCE_DIR}/src/win32/tss_dll.cpp
+                ${boost_thread_SOURCE_DIR}/src/win32/tss_pe.cpp
+                )
+    else()
+        target_sources(boost_thread PRIVATE
+                ${boost_thread_SOURCE_DIR}/src/pthread/thread.cpp
+                ${boost_thread_SOURCE_DIR}/src/pthread/once.cpp
+                )
+    endif()
 
     bcm_setup_version(VERSION 1.74.0)
 
@@ -88,5 +87,5 @@ if (NOT TARGET Boost::thread)
     find_package(Threads)
     target_link_libraries(boost_thread PRIVATE Threads::Threads)
     target_include_directories(boost_thread PRIVATE ${boost_thread_SOURCE_DIR}/include)
-    bcm_deploy(TARGETS boost_thread INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_thread INCLUDE ${boost_thread_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
