@@ -14,6 +14,6 @@ if (NOT TARGET boost_concept_check)
     target_link_libraries(boost_concept_check INTERFACE Boost::type_traits)
     target_link_libraries(boost_concept_check INTERFACE Boost::static_assert)
     target_link_libraries(boost_concept_check INTERFACE Boost::preprocessor)
-    bcm_deploy(TARGETS boost_concept_check INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_concept_check INCLUDE ${boost_concept_check_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
 

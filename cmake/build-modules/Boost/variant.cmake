@@ -42,5 +42,5 @@ if (NOT TARGET boost_variant)
     target_link_libraries(boost_variant INTERFACE Boost::math)
     target_link_libraries(boost_variant INTERFACE Boost::utility)
     
-    bcm_deploy(TARGETS boost_variant INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_variant INCLUDE ${boost_variant_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()

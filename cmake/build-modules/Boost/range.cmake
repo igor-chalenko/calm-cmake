@@ -21,6 +21,7 @@ if (NOT TARGET boost_range)
     include(${_current_dir}/build-modules/Boost/utility.cmake)
 
     project(boost_range VERSION 1.74.0)
+    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS range)
     bcm_setup_version(VERSION 1.74.0)
 
     #target_include_directories(boost_range INTERFACE ${boost_range_SOURCE_DIR}/include)
@@ -44,6 +45,6 @@ if (NOT TARGET boost_range)
     target_link_libraries(boost_range INTERFACE Boost::config)
     target_link_libraries(boost_range INTERFACE Boost::numeric_conversion)
     target_link_libraries(boost_range INTERFACE Boost::utility)
-    bcm_deploy(TARGETS boost_range INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_range INCLUDE ${boost_range_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
 

@@ -126,6 +126,6 @@ if (NOT TARGET boost_math)
     if(HAVE_SIZEOF_LONG_DOUBLE)
         add_boost_math_library(c99 l)
     endif()
-    bcm_deploy(TARGETS boost_math INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_math INCLUDE ${boost_math_SOURCE_DIR}/include NAMESPACE Boost::)
 
 endif()

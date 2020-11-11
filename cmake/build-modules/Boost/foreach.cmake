@@ -1,9 +1,6 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 
 if (NOT TARGET boost_foreach)
-    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS foreach)
-
-    bcm_setup_version(VERSION 1.74.0)
     add_library(boost_foreach INTERFACE)
 
     include(${_current_dir}/build-modules/Boost/core.cmake)
@@ -14,6 +11,9 @@ if (NOT TARGET boost_foreach)
     include(${_current_dir}/build-modules/Boost/config.cmake)
 
     project(boost_foreach VERSION 1.74.0)
+    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS foreach)
+    bcm_setup_version(VERSION 1.74.0)
+
     add_library(Boost::foreach ALIAS boost_foreach)
     set_property(TARGET boost_foreach PROPERTY EXPORT_NAME foreach)
     
@@ -23,5 +23,5 @@ if (NOT TARGET boost_foreach)
     target_link_libraries(boost_foreach INTERFACE Boost::range)
     target_link_libraries(boost_foreach INTERFACE Boost::type_traits)
     target_link_libraries(boost_foreach INTERFACE Boost::config)
-    bcm_deploy(TARGETS boost_foreach INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_foreach INCLUDE ${boost_foreach_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()

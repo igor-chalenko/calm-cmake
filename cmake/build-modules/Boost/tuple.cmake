@@ -15,6 +15,6 @@ if (NOT TARGET boost_tuple)
     target_link_libraries(boost_tuple INTERFACE Boost::core)
     target_link_libraries(boost_tuple INTERFACE Boost::static_assert)
     target_link_libraries(boost_tuple INTERFACE Boost::type_traits)
-    bcm_deploy(TARGETS boost_tuple INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_tuple INCLUDE ${boost_tuple_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
 

@@ -20,6 +20,6 @@ if (NOT TARGET boost_mpl)
     target_link_libraries(boost_mpl INTERFACE Boost::static_assert)
     target_link_libraries(boost_mpl INTERFACE Boost::type_traits)
     target_link_libraries(boost_mpl INTERFACE Boost::utility)
-    bcm_deploy(TARGETS boost_mpl INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_mpl INCLUDE ${boost_mpl_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
 

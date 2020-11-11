@@ -13,6 +13,6 @@ if (NOT TARGET boost_assert)
 
     set_property(TARGET boost_assert PROPERTY EXPORT_NAME assert)
     target_link_libraries(boost_assert INTERFACE Boost::config)
-    bcm_deploy(TARGETS boost_assert INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_assert INCLUDE ${boost_assert_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
 

@@ -1,8 +1,5 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 if (NOT TARGET boost_proto)
-    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS proto)
-
-    bcm_setup_version(VERSION 1.74.0)
     add_library(boost_proto INTERFACE)
 
     include(${_current_dir}/build-modules/Boost/config.cmake)
@@ -18,6 +15,9 @@ if (NOT TARGET boost_proto)
     include(${_current_dir}/build-modules/Boost/typeof.cmake)
 
     project(boost_proto VERSION 1.74.0)
+    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS proto)
+
+    bcm_setup_version(VERSION 1.74.0)
     set_property(TARGET boost_proto PROPERTY EXPORT_NAME proto)
 
     target_link_libraries(boost_proto INTERFACE Boost::core)
@@ -30,5 +30,5 @@ if (NOT TARGET boost_proto)
     target_link_libraries(boost_proto INTERFACE Boost::utility)
     target_link_libraries(boost_proto INTERFACE Boost::config)
     target_link_libraries(boost_proto INTERFACE Boost::typeof)
-    bcm_deploy(TARGETS boost_proto INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_proto INCLUDE ${boost_proto_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()

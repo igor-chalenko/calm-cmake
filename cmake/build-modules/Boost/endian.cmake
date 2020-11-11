@@ -24,6 +24,6 @@ if (NOT TARGET boost_endian)
     target_link_libraries(boost_endian INTERFACE Boost::type_traits)
     target_link_libraries(boost_endian INTERFACE Boost::config)
     target_link_libraries(boost_endian INTERFACE Boost::utility)
-    bcm_deploy(TARGETS boost_endian INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_endian INCLUDE ${boost_endian_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
 

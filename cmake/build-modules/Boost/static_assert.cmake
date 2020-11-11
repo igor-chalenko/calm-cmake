@@ -10,6 +10,6 @@ if (NOT TARGET boost_static_assert)
     add_library(Boost::static_assert ALIAS boost_static_assert)
     set_property(TARGET boost_static_assert PROPERTY EXPORT_NAME static_assert)
     target_link_libraries(boost_static_assert INTERFACE Boost::config)
-    bcm_deploy(TARGETS boost_static_assert INCLUDE include NAMESPACE Boost::)
+    bcm_deploy(TARGETS boost_static_assert INCLUDE ${boost_static_assert_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
 
