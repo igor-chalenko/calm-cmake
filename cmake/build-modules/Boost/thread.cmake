@@ -87,6 +87,6 @@ if (NOT TARGET Boost::thread)
 
     find_package(Threads)
     target_link_libraries(boost_thread PRIVATE Threads::Threads)
+    target_include_directories(boost_thread PRIVATE ${boost_thread_SOURCE_DIR}/include)
     bcm_deploy(TARGETS boost_thread INCLUDE include NAMESPACE Boost::)
-    #target_include_directories(boost_thread PRIVATE ${boost_thread_SOURCE_DIR}/include)
 endif()
