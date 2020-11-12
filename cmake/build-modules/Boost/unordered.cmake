@@ -1,6 +1,8 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 
 if (NOT TARGET boost_unordered)
+    add_library(boost_unordered INTERFACE)
+
     include(${_current_dir}/build-modules/Boost/core.cmake)
     include(${_current_dir}/build-modules/Boost/container.cmake)
     include(${_current_dir}/build-modules/Boost/iterator.cmake)
@@ -16,8 +18,9 @@ if (NOT TARGET boost_unordered)
     include(${_current_dir}/build-modules/Boost/smart_ptr.cmake)
 
     project(boost_unordered VERSION 1.74.0)
+    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS unordered)
+
     bcm_setup_version(VERSION 1.74.0)
-    add_library(boost_unordered INTERFACE)
     add_library(Boost::unordered ALIAS boost_unordered)
 
     #target_include_directories(boost_unordered INTERFACE ${boost_unordered_SOURCE_DIR}/include)
