@@ -1,6 +1,7 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 
 if (NOT TARGET boost_date_time)
+    add_library(boost_date_time INTERFACE)
     include(${_current_dir}/build-modules/Boost/core.cmake)
     include(${_current_dir}/build-modules/Boost/detail.cmake)
     include(${_current_dir}/build-modules/Boost/move.cmake)
@@ -14,7 +15,6 @@ if (NOT TARGET boost_date_time)
     _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS date_time)
 
     bcm_setup_version(VERSION 1.74.0)
-    add_library(boost_date_time INTERFACE)
     add_library(Boost::date_time ALIAS boost_date_time)
     set_property(TARGET boost_date_time PROPERTY EXPORT_NAME date_time)
     target_link_libraries(boost_date_time INTERFACE Boost::core)

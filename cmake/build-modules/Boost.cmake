@@ -5,12 +5,15 @@ foreach(_component ${ARG_COMPONENTS})
             GIT_TAG ${_git_tag})
 endforeach()
 
-CPMFindPackage(NAME BCM
-        DOWNLOAD_ONLY
-        GITHUB_REPOSITORY boost-cmake/bcm
-        GIT_TAG master)
-list(PREPEND CMAKE_MODULE_PATH "${BCM_SOURCE_DIR}/share/bcm/cmake")
-find_package(BCM REQUIRED)
+get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
+set(_package_dir "${_current_dir}/3rd-party/BCM")
+if (IS_DIRECTORY "${_package_dir}")
+    list(PREPEND CMAKE_MODULE_PATH "${_package_dir}/share/bcm/cmake")
+endif()
+_calm_find_package(BCM master)
+#find_package(BCM REQUIRED)
 include(BCMFuture)
 include(BCMDeploy)
 include(BCMSetupVersion)
+#endif()
+

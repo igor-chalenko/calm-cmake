@@ -34,6 +34,7 @@ if (NOT TARGET Boost::locale)
             ${boost_locale_SOURCE_DIR}/src/shared/message.cpp
             ${boost_locale_SOURCE_DIR}/src/shared/mo_lambda.cpp
             ${boost_locale_SOURCE_DIR}/src/util/codecvt_converter.cpp
+            ${boost_locale_SOURCE_DIR}/src/util/gregorian.cpp
             ${boost_locale_SOURCE_DIR}/src/util/default_locale.cpp
             ${boost_locale_SOURCE_DIR}/src/util/info.cpp
             ${boost_locale_SOURCE_DIR}/src/util/locale_data.cpp
