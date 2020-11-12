@@ -19,6 +19,9 @@ if (NOT TARGET Boost::locale)
     include(${_current_dir}/build-modules/Boost/numeric_conversion.cmake)
     include(${_current_dir}/build-modules/Boost/utility.cmake)
 
+    project(boost_locale VERSION 1.74.0)
+    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS locale)
+
     # todo ?
     find_package(ICU COMPONENTS uc dt in)
     find_package(Iconv)
@@ -93,8 +96,6 @@ if (NOT TARGET Boost::locale)
         target_compile_definitions(boost_locale PUBLIC BOOST_LOCALE_NO_POSIX_BACKEND=1)
     endif()
 
-    project(boost_locale VERSION 1.74.0)
-    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS locale)
     bcm_setup_version(VERSION 1.74.0)
 
     if(CMAKE_SYSTEM MATCHES "SunOS.*")
