@@ -82,7 +82,6 @@ function(_calm_plugin_manifest _plugin)
     _calm_set_plugin_parameters(${_plugin} "${ARG_PARAMETERS}")
     _calm_set_plugin_options(${_plugin} "${ARG_OPTIONS}")
     if (ARG_CPM_ARGUMENTS)
-        message(STATUS "[_calm_plugin_manifest] ${_plugin} ${ARG_CPM_ARGUMENTS}")
         _calm_set_cpm_arguments(${_plugin} "${ARG_CPM_ARGUMENTS}")
     endif ()
 

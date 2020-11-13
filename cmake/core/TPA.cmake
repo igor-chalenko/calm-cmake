@@ -5,6 +5,13 @@
 # https://opensource.org/licenses/MIT
 ##############################################################################
 
+get_property(_include_guard GLOBAL PROPERTY TPA_CMAKE_INCLUDE_GUARD)
+if (NOT _include_guard)
+    set_property(GLOBAL PROPERTY TPA_CMAKE_INCLUDE_GUARD ON)
+else()
+    return()
+endif()
+
 ##############################################################################
 #.rst:
 # Target Property Accessors (TPA)
@@ -195,7 +202,7 @@ endfunction()
 # This function should not be used anywhere except in `_TPA_current_scope`.
 ##############################################################################
 function(_TPA_scope_name _out_var)
-    string(REPLACE " " "." _replaced "${CMAKE_PROJECT_NAME}")
+    string(REPLACE " " "." _replaced "${CMAKE_SOURCE_DIR}")
     string(REPLACE "/" "." _replaced "${_replaced}")
     string(REPLACE "\\" "." _replaced "${_replaced}")
     set(${_out_var} "${_replaced}.properties" PARENT_SCOPE)
