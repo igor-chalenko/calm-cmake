@@ -1,13 +1,6 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 
 if (NOT TARGET boost_iostreams)
-    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS iostreams)
-    add_library(boost_iostreams
-            ${boost_iostreams_SOURCE_DIR}/src/gzip.cpp
-            ${boost_iostreams_SOURCE_DIR}/src/file_descriptor.cpp
-            ${boost_iostreams_SOURCE_DIR}/src/mapped_file.cpp
-            )
-
     include(${_current_dir}/build-modules/Boost/regex.cmake)
     include(${_current_dir}/build-modules/Boost/core.cmake)
     include(${_current_dir}/build-modules/Boost/static_assert.cmake)
@@ -27,6 +20,13 @@ if (NOT TARGET boost_iostreams)
     include(${_current_dir}/build-modules/Boost/utility.cmake)
 
     project(boost_iostreams VERSION 1.74.0)
+    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS iostreams)
+    add_library(boost_iostreams
+            ${boost_iostreams_SOURCE_DIR}/src/gzip.cpp
+            ${boost_iostreams_SOURCE_DIR}/src/file_descriptor.cpp
+            ${boost_iostreams_SOURCE_DIR}/src/mapped_file.cpp
+            )
+
     bcm_setup_version(VERSION 1.74.0)
 
     add_library(Boost::iostreams ALIAS boost_iostreams)
