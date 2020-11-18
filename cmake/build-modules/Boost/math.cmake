@@ -26,33 +26,43 @@ if (NOT TARGET boost_math)
     project(boost_math VERSION 1.74.0)
 
     _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS math)
+    calm_add_library(${PROJECT_NAME} INTERFACE
+            INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
+            DEPENDENCIES Boost::function Boost::core Boost::static_assert Boost::predef Boost::tuple Boost::array
+            Boost::mpl Boost::atomic Boost::detail Boost::fusion Boost::assert
+            Boost::range Boost::type_traits Boost::concept_check Boost::smart_ptr Boost::lexical_cast Boost::utility
+            Boost::config Boost::throw_exception Boost::lambda
+            NAMESPACE Boost
+            EXPORT_NAME math
+            )
+
     include(CheckTypeSize)
 
-    add_library(Boost::math ALIAS boost_math)
-    set_property(TARGET boost_math PROPERTY EXPORT_NAME math)
+    #add_library(Boost::math ALIAS boost_math)
+    #set_property(TARGET boost_math PROPERTY EXPORT_NAME math)
 
     #target_include_directories(boost_math INTERFACE ${boost_math_SOURCE_DIR}/include)
 
-    target_link_libraries(boost_math INTERFACE Boost::function)
-    target_link_libraries(boost_math INTERFACE Boost::core)
-    target_link_libraries(boost_math INTERFACE Boost::static_assert)
-    target_link_libraries(boost_math INTERFACE Boost::predef)
-    target_link_libraries(boost_math INTERFACE Boost::tuple)
-    target_link_libraries(boost_math INTERFACE Boost::array)
-    target_link_libraries(boost_math INTERFACE Boost::mpl)
-    target_link_libraries(boost_math INTERFACE Boost::atomic)
-    target_link_libraries(boost_math INTERFACE Boost::detail)
-    target_link_libraries(boost_math INTERFACE Boost::fusion)
-    target_link_libraries(boost_math INTERFACE Boost::assert)
-    target_link_libraries(boost_math INTERFACE Boost::range)
-    target_link_libraries(boost_math INTERFACE Boost::type_traits)
-    target_link_libraries(boost_math INTERFACE Boost::concept_check)
-    target_link_libraries(boost_math INTERFACE Boost::smart_ptr)
-    target_link_libraries(boost_math INTERFACE Boost::lexical_cast)
-    target_link_libraries(boost_math INTERFACE Boost::utility)
-    target_link_libraries(boost_math INTERFACE Boost::config)
-    target_link_libraries(boost_math INTERFACE Boost::throw_exception)
-    target_link_libraries(boost_math INTERFACE Boost::lambda)
+    #target_link_libraries(boost_math INTERFACE Boost::function)
+    #target_link_libraries(boost_math INTERFACE Boost::core)
+    #target_link_libraries(boost_math INTERFACE Boost::static_assert)
+    #target_link_libraries(boost_math INTERFACE Boost::predef)
+    #target_link_libraries(boost_math INTERFACE Boost::tuple)
+    #target_link_libraries(boost_math INTERFACE Boost::array)
+    #target_link_libraries(boost_math INTERFACE Boost::mpl)
+    #target_link_libraries(boost_math INTERFACE Boost::atomic)
+    #target_link_libraries(boost_math INTERFACE Boost::detail)
+    #target_link_libraries(boost_math INTERFACE Boost::fusion)
+    #target_link_libraries(boost_math INTERFACE Boost::assert)
+    #target_link_libraries(boost_math INTERFACE Boost::range)
+    #target_link_libraries(boost_math INTERFACE Boost::type_traits)
+    #target_link_libraries(boost_math INTERFACE Boost::concept_check)
+    #target_link_libraries(boost_math INTERFACE Boost::smart_ptr)
+    #target_link_libraries(boost_math INTERFACE Boost::lexical_cast)
+    #target_link_libraries(boost_math INTERFACE Boost::utility)
+    #target_link_libraries(boost_math INTERFACE Boost::config)
+    #target_link_libraries(boost_math INTERFACE Boost::throw_exception)
+    #target_link_libraries(boost_math INTERFACE Boost::lambda)
 
     set(BOOST_MATH_c99_SOURCES
             ${boost_math_SOURCE_DIR}/src/tr1/acosh
@@ -108,9 +118,18 @@ if (NOT TARGET boost_math)
             list(APPEND SOURCES ${SOURCE}${ARGN}.cpp)
         endforeach()
         add_library(boost_math_${NAME}${ARGN} ${SOURCES})
-        set_property(TARGET boost_math_${NAME}${ARGN} PROPERTY EXPORT_NAME math_${NAME}${ARGN})
+
+        calm_add_library(boost_math_${NAME}${ARGN}
+                SOURCES ${SOURCES}
+                #INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/src/tr1>;$<INSTALL_INTERFACE:include>
+                DEPENDENCIES Boost::math
+                NAMESPACE Boost
+                EXPORT_NAME math_${NAME}${ARGN}
+                )
+
+        #set_property(TARGET boost_math_${NAME}${ARGN} PROPERTY EXPORT_NAME math_${NAME}${ARGN})
         target_include_directories(boost_math_${NAME}${ARGN} PRIVATE ${boost_math_SOURCE_DIR}/src/tr1)
-        target_link_libraries(boost_math_${NAME}${ARGN} boost_math)
+        #target_link_libraries(boost_math_${NAME}${ARGN} boost_math)
     endfunction()
 
     check_type_size("long double" SIZEOF_LONG_DOUBLE)
@@ -126,6 +145,6 @@ if (NOT TARGET boost_math)
     if(HAVE_SIZEOF_LONG_DOUBLE)
         add_boost_math_library(c99 l)
     endif()
-    bcm_deploy(TARGETS boost_math INCLUDE ${boost_math_SOURCE_DIR}/include NAMESPACE Boost::)
+    #bcm_deploy(TARGETS boost_math INCLUDE ${boost_math_SOURCE_DIR}/include NAMESPACE Boost::)
 
 endif()

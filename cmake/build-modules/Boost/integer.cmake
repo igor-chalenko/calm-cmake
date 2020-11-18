@@ -8,13 +8,19 @@ if (NOT TARGET boost_integer)
 
     _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS integer)
 
-    bcm_setup_version(VERSION 1.74.0)
+    #bcm_setup_version(VERSION 1.74.0)
     add_library(boost_integer INTERFACE)
-    add_library(Boost::integer ALIAS boost_integer)
+    calm_add_library(${PROJECT_NAME} INTERFACE
+            INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
+            DEPENDENCIES Boost::integer Boost::static_assert Boost::core Boost::throw_exception
+            NAMESPACE Boost
+            EXPORT_NAME integer
+            )
 
-    set_property(TARGET boost_integer PROPERTY EXPORT_NAME integer)
-    target_link_libraries(boost_integer INTERFACE Boost::core)
-    target_link_libraries(boost_integer INTERFACE Boost::static_assert)
-    target_link_libraries(boost_integer INTERFACE Boost::throw_exception)
-    bcm_deploy(TARGETS boost_integer INCLUDE ${boost_integer_SOURCE_DIR}/include NAMESPACE Boost::)
+    #add_library(Boost::integer ALIAS boost_integer)
+    #set_property(TARGET boost_integer PROPERTY EXPORT_NAME integer)
+    #target_link_libraries(boost_integer INTERFACE Boost::core)
+    #target_link_libraries(boost_integer INTERFACE Boost::static_assert)
+    #target_link_libraries(boost_integer INTERFACE Boost::throw_exception)
+    #bcm_deploy(TARGETS boost_integer INCLUDE ${boost_integer_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()

@@ -14,19 +14,27 @@ if (NOT TARGET boost_lambda)
     project(boost_lambda VERSION 1.74.0)
     _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS lambda)
 
-    bcm_setup_version(VERSION 1.74.0)
-    add_library(boost_lambda INTERFACE)
-    add_library(Boost::lambda ALIAS boost_lambda)
-    set_property(TARGET boost_lambda PROPERTY EXPORT_NAME lambda)
-    target_link_libraries(boost_lambda INTERFACE Boost::core)
-    target_link_libraries(boost_lambda INTERFACE Boost::iterator)
-    target_link_libraries(boost_lambda INTERFACE Boost::tuple)
-    target_link_libraries(boost_lambda INTERFACE Boost::bind)
-    target_link_libraries(boost_lambda INTERFACE Boost::mpl)
-    target_link_libraries(boost_lambda INTERFACE Boost::detail)
-    target_link_libraries(boost_lambda INTERFACE Boost::type_traits)
-    target_link_libraries(boost_lambda INTERFACE Boost::preprocessor)
-    target_link_libraries(boost_lambda INTERFACE Boost::utility)
-    target_link_libraries(boost_lambda INTERFACE Boost::config)
-    bcm_deploy(TARGETS boost_lambda INCLUDE ${boost_lambda_SOURCE_DIR}/include NAMESPACE Boost::)
+    calm_add_library(${PROJECT_NAME} INTERFACE
+            INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
+            DEPENDENCIES Boost::core Boost::iterator Boost::tuple Boost::bind
+                         Boost::mpl Boost::detail Boost::preprocessor Boost::type_traits
+                         Boost::utility Boost::config
+            NAMESPACE Boost
+            EXPORT_NAME lambda
+            )
+    #bcm_setup_version(VERSION 1.74.0)
+    #add_library(boost_lambda INTERFACE)
+    #add_library(Boost::lambda ALIAS boost_lambda)
+    #set_property(TARGET boost_lambda PROPERTY EXPORT_NAME lambda)
+    #target_link_libraries(boost_lambda INTERFACE Boost::core)
+    #target_link_libraries(boost_lambda INTERFACE Boost::iterator)
+    #target_link_libraries(boost_lambda INTERFACE Boost::tuple)
+    #target_link_libraries(boost_lambda INTERFACE Boost::bind)
+    #target_link_libraries(boost_lambda INTERFACE Boost::mpl)
+    #target_link_libraries(boost_lambda INTERFACE Boost::detail)
+    #target_link_libraries(boost_lambda INTERFACE Boost::type_traits)
+    #target_link_libraries(boost_lambda INTERFACE Boost::preprocessor)
+    #target_link_libraries(boost_lambda INTERFACE Boost::utility)
+    #target_link_libraries(boost_lambda INTERFACE Boost::config)
+    #bcm_deploy(TARGETS boost_lambda INCLUDE ${boost_lambda_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()

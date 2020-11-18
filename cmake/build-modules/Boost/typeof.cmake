@@ -8,10 +8,16 @@ if (NOT TARGET boost_typeof)
     project(boost_typeof VERSION 1.74.0)
     _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS typeof)
 
-    bcm_setup_version(VERSION 1.74.0)
-    add_library(Boost::typeof ALIAS boost_typeof)
-    set_property(TARGET boost_typeof PROPERTY EXPORT_NAME typeof)
-    target_link_libraries(boost_typeof INTERFACE Boost::type_traits)
-    target_link_libraries(boost_typeof INTERFACE Boost::preprocessor)
-    bcm_deploy(TARGETS boost_typeof INCLUDE ${boost_typeof_SOURCE_DIR}/include NAMESPACE Boost::)
+    calm_add_library(${PROJECT_NAME} INTERFACE
+            INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
+            DEPENDENCIES Boost::type_traits Boost::preprocessor
+            NAMESPACE Boost
+            EXPORT_NAME typeof
+            )
+    #bcm_setup_version(VERSION 1.74.0)
+    #add_library(Boost::typeof ALIAS boost_typeof)
+    #set_property(TARGET boost_typeof PROPERTY EXPORT_NAME typeof)
+    #target_link_libraries(boost_typeof INTERFACE Boost::type_traits)
+    #target_link_libraries(boost_typeof INTERFACE Boost::preprocessor)
+    #bcm_deploy(TARGETS boost_typeof INCLUDE ${boost_typeof_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()

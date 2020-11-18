@@ -21,33 +21,44 @@ if (NOT TARGET boost_iostreams)
 
     project(boost_iostreams VERSION 1.74.0)
     _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS iostreams)
-    add_library(boost_iostreams
-            ${boost_iostreams_SOURCE_DIR}/src/gzip.cpp
-            ${boost_iostreams_SOURCE_DIR}/src/file_descriptor.cpp
-            ${boost_iostreams_SOURCE_DIR}/src/mapped_file.cpp
+    calm_add_library(${PROJECT_NAME}
+            SOURCES "${${PROJECT_NAME}_SOURCE_DIR}/src"
+            INCLUDES "$<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>"
+            DEPENDENCIES Boost::core Boost::regex Boost::static_assert Boost::function Boost::bind
+            Boost::mpl Boost::random Boost::detail Boost::assert Boost::range
+            Boost::type_traits Boost::preprocessor Boost::smart_ptr Boost::integer Boost::config
+            Boost::throw_exception Boost::utility
+            NAMESPACE Boost
+            EXPORT_NAME iostreams
             )
 
-    bcm_setup_version(VERSION 1.74.0)
+    #add_library(boost_iostreams
+    #        ${boost_iostreams_SOURCE_DIR}/src/gzip.cpp
+    #        ${boost_iostreams_SOURCE_DIR}/src/file_descriptor.cpp
+    #        ${boost_iostreams_SOURCE_DIR}/src/mapped_file.cpp
+    #        )
 
-    add_library(Boost::iostreams ALIAS boost_iostreams)
-    set_property(TARGET boost_iostreams PROPERTY EXPORT_NAME iostreams)
+    #bcm_setup_version(VERSION 1.74.0)
 
-    target_link_libraries(boost_iostreams INTERFACE Boost::regex)
-    target_link_libraries(boost_iostreams INTERFACE Boost::core)
-    target_link_libraries(boost_iostreams INTERFACE Boost::static_assert)
-    target_link_libraries(boost_iostreams INTERFACE Boost::function)
-    target_link_libraries(boost_iostreams INTERFACE Boost::bind)
-    target_link_libraries(boost_iostreams INTERFACE Boost::mpl)
-    target_link_libraries(boost_iostreams INTERFACE Boost::random)
-    target_link_libraries(boost_iostreams INTERFACE Boost::detail)
-    target_link_libraries(boost_iostreams INTERFACE Boost::assert)
-    target_link_libraries(boost_iostreams INTERFACE Boost::range)
-    target_link_libraries(boost_iostreams INTERFACE Boost::type_traits)
-    target_link_libraries(boost_iostreams INTERFACE Boost::preprocessor)
-    target_link_libraries(boost_iostreams INTERFACE Boost::smart_ptr)
-    target_link_libraries(boost_iostreams INTERFACE Boost::integer)
-    target_link_libraries(boost_iostreams INTERFACE Boost::config)
-    target_link_libraries(boost_iostreams INTERFACE Boost::throw_exception)
-    target_link_libraries(boost_iostreams INTERFACE Boost::utility)
-    bcm_deploy(TARGETS boost_iostreams INCLUDE ${boost_iostreams_SOURCE_DIR}/include NAMESPACE Boost::)
+    #add_library(Boost::iostreams ALIAS boost_iostreams)
+    #set_property(TARGET boost_iostreams PROPERTY EXPORT_NAME iostreams)
+
+    #target_link_libraries(boost_iostreams INTERFACE Boost::regex)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::core)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::static_assert)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::function)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::bind)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::mpl)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::random)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::detail)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::assert)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::range)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::type_traits)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::preprocessor)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::smart_ptr)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::integer)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::config)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::throw_exception)
+    #target_link_libraries(boost_iostreams INTERFACE Boost::utility)
+    #bcm_deploy(TARGETS boost_iostreams INCLUDE ${boost_iostreams_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()

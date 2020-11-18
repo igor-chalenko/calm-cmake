@@ -7,13 +7,18 @@ if (NOT TARGET boost_throw_exception)
     project(boost_throw_exception VERSION 1.74.0)
     _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS throw_exception)
 
-    bcm_setup_version(VERSION 1.74.0)
-    add_library(boost_throw_exception INTERFACE)
-    add_library(Boost::throw_exception ALIAS boost_throw_exception)
+    #bcm_setup_version(VERSION 1.74.0)
+    calm_add_library(${PROJECT_NAME} INTERFACE
+            INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
+            NAMESPACE Boost
+            DEPENDENCIES Boost::config Boost::assert
+            EXPORT_NAME throw_exception
+            )
+    #add_library(Boost::throw_exception ALIAS boost_throw_exception)
 
-    set_property(TARGET boost_throw_exception PROPERTY EXPORT_NAME throw_exception)
-    target_link_libraries(boost_throw_exception INTERFACE Boost::assert)
-    target_link_libraries(boost_throw_exception INTERFACE Boost::config)
-    bcm_deploy(TARGETS boost_throw_exception INCLUDE ${boost_throw_exception_SOURCE_DIR}/include NAMESPACE Boost::)
+    #set_property(TARGET boost_throw_exception PROPERTY EXPORT_NAME throw_exception)
+    #target_link_libraries(boost_throw_exception INTERFACE Boost::assert)
+    #target_link_libraries(boost_throw_exception INTERFACE Boost::config)
+    #bcm_deploy(TARGETS boost_throw_exception INCLUDE ${boost_throw_exception_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
 
