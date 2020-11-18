@@ -49,7 +49,7 @@ if (NOT TARGET Boost::thread)
                 )
     endif()
 
-    calm_add_library(${PROJECT_NAME} INTERFACE
+    calm_add_library(${PROJECT_NAME}
             INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
             DEPENDENCIES Boost::predef Boost::move Boost::functional Boost::concept_check Boost::atomic
             Boost::io Boost::utility Boost::static_assert Boost::container Boost::system
