@@ -27,7 +27,7 @@ if (NOT TARGET boost_filesystem)
             ${boost_filesystem_SOURCE_DIR}/src/utf8_codecvt_facet.cpp
             )
 
-    calm_add_library(${PROJECT_NAME} INTERFACE
+    calm_add_library(${PROJECT_NAME}
             INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
             DEPENDENCIES Boost::core Boost::static_assert Boost::functional Boost::iterator Boost::system Boost::detail
             Boost::assert Boost::range Boost::type_traits Boost::smart_ptr Boost::io
