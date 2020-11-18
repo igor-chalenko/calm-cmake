@@ -50,7 +50,7 @@ if (NOT TARGET boost_spirit)
             INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
             DEPENDENCIES Boost::core Boost::config Boost::assert Boost::container_hash Boost::integer
             Boost::iterator Boost::mpl Boost::predef Boost::smart_ptr Boost::static_assert
-            Boost::throw_exception Boost::type_traits
+            Boost::throw_exception Boost::type_traits Boost::variant
             NAMESPACE Boost
             EXPORT_NAME spirit
             )
