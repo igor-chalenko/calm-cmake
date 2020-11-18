@@ -60,7 +60,7 @@ if (NOT TARGET Boost::locale)
         set(BOOST_LOCALE_WITH_STD On CACHE BOOL "")
     endif()
 
-    calm_add_library(${PROJECT_NAME} INTERFACE
+    calm_add_library(${PROJECT_NAME}
             INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
             DEPENDENCIES Boost::core Boost::iterator Boost::functional Boost::regex Boost::optional
             Boost::iterator Boost::mpl Boost::tuple Boost::smart_ptr Boost::static_assert
