@@ -27,22 +27,30 @@ if (NOT TARGET boost_filesystem)
             ${boost_filesystem_SOURCE_DIR}/src/utf8_codecvt_facet.cpp
             )
 
-    add_library(Boost::filesystem ALIAS boost_filesystem)
-    set_property(TARGET boost_filesystem PROPERTY EXPORT_NAME filesystem)
-    bcm_setup_version(VERSION 1.74.0)
+    calm_add_library(${PROJECT_NAME} INTERFACE
+            INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
+            DEPENDENCIES Boost::core Boost::static_assert Boost::functional Boost::iterator Boost::system Boost::detail
+            Boost::assert Boost::range Boost::type_traits Boost::smart_ptr Boost::io
+            Boost::config
+            NAMESPACE Boost
+            EXPORT_NAME filesystem
+            )
+    #add_library(Boost::filesystem ALIAS boost_filesystem)
+    #set_property(TARGET boost_filesystem PROPERTY EXPORT_NAME filesystem)
+    #bcm_setup_version(VERSION 1.74.0)
 
-    target_link_libraries(boost_filesystem INTERFACE Boost::core)
-    target_link_libraries(boost_filesystem INTERFACE Boost::static_assert)
-    target_link_libraries(boost_filesystem INTERFACE Boost::functional)
-    target_link_libraries(boost_filesystem INTERFACE Boost::iterator)
-    target_link_libraries(boost_filesystem INTERFACE Boost::system)
-    target_link_libraries(boost_filesystem INTERFACE Boost::detail)
-    target_link_libraries(boost_filesystem INTERFACE Boost::assert)
-    target_link_libraries(boost_filesystem INTERFACE Boost::range)
-    target_link_libraries(boost_filesystem INTERFACE Boost::type_traits)
-    target_link_libraries(boost_filesystem INTERFACE Boost::smart_ptr)
-    target_link_libraries(boost_filesystem INTERFACE Boost::io)
-    target_link_libraries(boost_filesystem INTERFACE Boost::config)
+    #target_link_libraries(boost_filesystem INTERFACE Boost::core)
+    #target_link_libraries(boost_filesystem INTERFACE Boost::static_assert)
+    #target_link_libraries(boost_filesystem INTERFACE Boost::functional)
+    #target_link_libraries(boost_filesystem INTERFACE Boost::iterator)
+    #target_link_libraries(boost_filesystem INTERFACE Boost::system)
+    #target_link_libraries(boost_filesystem INTERFACE Boost::detail)
+    #target_link_libraries(boost_filesystem INTERFACE Boost::assert)
+    #target_link_libraries(boost_filesystem INTERFACE Boost::range)
+    #target_link_libraries(boost_filesystem INTERFACE Boost::type_traits)
+    #target_link_libraries(boost_filesystem INTERFACE Boost::smart_ptr)
+    #target_link_libraries(boost_filesystem INTERFACE Boost::io)
+    #target_link_libraries(boost_filesystem INTERFACE Boost::config)
 
-    bcm_deploy(TARGETS boost_filesystem INCLUDE ${boost_filesystem_SOURCE_DIR}/include NAMESPACE boost::)
+    #bcm_deploy(TARGETS boost_filesystem INCLUDE ${boost_filesystem_SOURCE_DIR}/include NAMESPACE boost::)
 endif()

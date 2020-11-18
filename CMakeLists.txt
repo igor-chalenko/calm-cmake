@@ -22,5 +22,5 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
             NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 
     # slash at the end remove `cmake` from the directory structure
-    install(DIRECTORY "cmake/" DESTINATION ${_DESTINATION})
+    #install(DIRECTORY "cmake/" DESTINATION ${_DESTINATION})
 endif()

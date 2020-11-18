@@ -5,7 +5,7 @@ function(_plugin_autotest_manifest)
     _calm_plugin_manifest(autotest
             TARGET_TYPES main
             PARAMETERS TEST_SOURCES
-            REQUIRED
+            OPTIONS AUTOTEST
             DESCRIPTION [=[
 This plugin scans files in the subdirectory `test` of the current project
 and creates an executable target for each found file. The target is then used

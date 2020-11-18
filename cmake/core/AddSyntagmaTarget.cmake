@@ -83,13 +83,15 @@ function(_calm_add_target _target _type)
     TPA_get("plugins.options" _all_options)
 
     set(_options ${_all_options} INTERFACE TEST)
-    set(_one_value_args "")
+    set(_one_value_args "EXPORT_NAME")
     set(_multi_value_args ${_all_parameters} INCLUDES SOURCES DEPENDENCIES)
 
     unset(ARG_UNPARSED_ARGUMENTS)
     unset(ARG_SOURCES)
     unset(ARG_INCLUDES)
+    unset(ARG_EXPORT_NAME)
     unset(ARG_DEPENDENCIES)
+    unset(ARG_NAMESPACE)
 
     cmake_parse_arguments(ARG
             "${_options}"
@@ -106,9 +108,19 @@ function(_calm_add_target _target _type)
     else ()
         set(_phase main)
     endif ()
+
     _calm_set_target_sources(${_target} "${ARG_SOURCES}")
     _calm_set_include_directories(${_target} ${_type} "${ARG_INCLUDES}")
-    _calm_add_dependencies(${_target} ${ARG_DEPENDENCIES})
+
+    if (ARG_EXPORT_NAME)
+        set_property(TARGET ${_target} PROPERTY EXPORT_NAME ${ARG_EXPORT_NAME})
+    endif()
+    if (ARG_NAMESPACE AND ARG_EXPORT_NAME)
+        add_library(${ARG_NAMESPACE}::${ARG_EXPORT_NAME} ALIAS ${_target})
+    endif()
+    if (DEFINED ARG_DEPENDENCIES)
+        _calm_add_dependencies(${_target} ${ARG_DEPENDENCIES})
+    endif()
     _calm_apply_plugins(${_target} ${_phase})
 endfunction()
 
@@ -138,12 +150,14 @@ function(_calm_set_target_sources _target _sources)
             endif ()
         endif ()
     else ()
-        add_library(${_target} INTERFACE)
+        if (NOT TARGET ${_target})
+            add_library(${_target} INTERFACE)
+        endif()
     endif ()
 endfunction()
 
 function(_calm_set_include_directories _target _type _includes)
-    if (NOT _includes AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/include")
+    if (NOT _includes AND EXISTS "${PROJECT_SOURCE_DIR}/include")
         set(_includes "include")
     endif ()
 
@@ -153,15 +167,35 @@ function(_calm_set_include_directories _target _type _includes)
         else()
             set(_visibility PUBLIC)
         endif()
+        set(_all_headers "")
         foreach(_include ${_includes})
-            file(GLOB_RECURSE _headers ${_include}/*)
-            set_target_properties(${_target}
-                    PROPERTIES PUBLIC_HEADER "${_headers}")
-            # todo check!
-            target_include_directories(${_target} ${_visibility}
-                      $<INSTALL_INTERFACE:${_include}>
-                      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${_include}>)
+            string(FIND ${_include} "$<BUILD_INTERFACE:" _ind)
+            if (_ind GREATER -1)
+                string(LENGTH "${_include}" _length)
+                math(EXPR _length "${_length} - 19")
+                string(SUBSTRING "${_include}" 18 ${_length} _new_include)
+                file(GLOB_RECURSE _headers ${_new_include}/*)
+                list(APPEND _all_headers "${_headers}")
+            else()
+                string(FIND ${_include} "$<INSTALL_INTERFACE:" _ind2)
+                if (_ind2 EQUAL -1)
+                    file(GLOB_RECURSE _headers ${_include}/*)
+                    list(APPEND _all_headers "${_headers}")
+                else()
+                    set(_headers "")
+                endif()
+            endif()
+
+            if (NOT _ind GREATER -1)
+                target_include_directories(${_target} ${_visibility}
+                          $<INSTALL_INTERFACE:${_include}>
+                          $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/${_include}>)
+            else()
+                target_include_directories(${_target} ${_visibility} ${_include})
+            endif()
         endforeach()
+        set_target_properties(${_target}
+                PROPERTIES PUBLIC_HEADER "${_all_headers}")
     endif ()
 endfunction()
 

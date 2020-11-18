@@ -6,7 +6,7 @@ include(${_current_cmake_dir}/../3rd-party/ycm/modules/InstallBasicPackageFiles.
 function(_plugin_install_manifest)
     _calm_plugin_manifest(install
             TARGET_TYPES main
-            OPTIONS INSTALL
+            PARAMETERS NAMESPACE
             DESCRIPTION [[
 This plugin constructs install commands for the given target.]])
 
@@ -19,7 +19,7 @@ function(_namespace_from_project_name _out_var)
     string(SUBSTRING "${CMAKE_PROJECT_NAME}" 0 1 _first_letter)
     string(TOUPPER ${_first_letter} _FIRST_LETTER)
     string(SUBSTRING "${CMAKE_PROJECT_NAME}" 1 -1 _rest)
-    set(${_out_var} "${_FIRST_LETTER}${_rest}::" PARENT_SCOPE)
+    set(${_out_var} "${_FIRST_LETTER}${_rest}" PARENT_SCOPE)
 endfunction()
 
 function(_reverse_alias_targets _out_var)
@@ -37,21 +37,15 @@ function(_reverse_alias_targets _out_var)
     set(${_out_var} "${_targets}" PARENT_SCOPE)
 endfunction()
 
-function(_filter_exported_targets _targets _out_var)
-    set(_res "")
-    foreach(_target ${_targets})
-        get_target_property(_export_name ${_target} EXPORT_NAME)
-        if(NOT _export_name)
-            list(APPEND _res ${_target})
-        endif()
-    endforeach()
-    set(${_out_var} "${_res}" PARENT_SCOPE)
-endfunction()
-
 function(_plugin_install_apply _target)
     get_target_property(_type ${_target} TYPE)
     set(_target_export_name "${_target}-targets")
-    _namespace_from_project_name(_namespace)
+
+    if (ARGV1)
+        set(_namespace "${ARGV1}")
+    else()
+        _namespace_from_project_name(_namespace)
+    endif()
 
     if (NOT DEFINED CMAKE_INSTALL_INCLUDEDIR)
         unset(CMAKE_INSTALL_INCLUDEDIR)
@@ -74,19 +68,21 @@ function(_amend_include_directories _target _includes)
         foreach (_include ${_includes})
             string(FIND "${_include}" "$<" _ind)
             #message(STATUS "[${_target}] amending ${_include}...")
-            if (IS_ABSOLUTE "${_include}")
+            #if (IS_ABSOLUTE "${_include}")
                 #continue()
-                get_target_property(_source_dir ${_target} INTERFACE_LOCATION)
-                if (NOT _source_dir)
-                    set(_source_dir "${${_target}_SOURCE_DIR}")
-                endif()
-                message(STATUS "[${_target}] `${_source_dir}`")
+            #    get_target_property(_source_dir ${_target} INTERFACE_LOCATION)
+            #    if (NOT _source_dir)
+            #        set(_source_dir "${${_target}_SOURCE_DIR}")
+            #    endif()
+                #message(STATUS "[${_target}] `${_source_dir}`")
 
-                file(RELATIVE_PATH _relative_include "${_source_dir}" "${_include}")
+            #    file(RELATIVE_PATH _relative_include "${_source_dir}" "${_include}")
                 #message(STATUS "[${_target}] absolute ${_include} -> relative ${_relative_include} ...")
-            else()
-                set(_relative_include "${_include}")
-            endif()
+            #else()
+            #    set(_relative_include "${_include}")
+            #endif()
+            set(_relative_include "${_include}")
+            #message(STATUS "[${_target}] include: ${_include}")
             if (${_ind} EQUAL -1)
                 list(APPEND _rebased_includes
                         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${_relative_include}>
@@ -123,30 +119,32 @@ function(_amend_link_libraries _target _dependencies)
     endif()
 endfunction()
 
+function(_lowercase _namespace _out_var)
+    string(TOLOWER ${_namespace} _lower)
+    set(${_out_var} ${_lower} PARENT_SCOPE)
+endfunction()
+
 function(_install_library _target _namespace)
-    get_target_property(_dependencies ${_target} INTERFACE_LINK_LIBRARIES)
-    get_target_property(_includes ${_target} INTERFACE_INCLUDE_DIRECTORIES)
-
-    #_amend_include_directories(${_target} "${_includes}")
-    _reverse_alias_targets(_targets ${_dependencies})
-    _filter_exported_targets("${_targets}" _targets)
-
-    set(_rebased_libraries "")
-    foreach(_dependency ${_targets})
-        get_target_property(_includes ${_dependency} INTERFACE_INCLUDE_DIRECTORIES)
-        _amend_include_directories(${_dependency} "${_includes}")
-    endforeach()
-    _amend_link_libraries(${_target} "${_dependencies}")
-
-    install(TARGETS ${_target} ${_targets}
+    if ("${_target}" STREQUAL ${_namespace})
+        set(_include_dir "${CMAKE_INSTALL_INCLUDEDIR}/${_target}")
+        set(_destination ${CMAKE_INSTALL_DATADIR}/${_target})
+    else()
+        get_target_property(_export_name ${_target} EXPORT_NAME)
+        _lowercase(${_namespace} _lower_namespace)
+        set(_include_dir "${CMAKE_INSTALL_INCLUDEDIR}/${_lower_namespace}/${_export_name}")
+        set(_destination ${CMAKE_INSTALL_DATADIR}/${_lower_namespace}/${_export_name})
+    endif()
+    install(TARGETS ${_target}
             EXPORT "${_target_export_name}"
-            PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${_target}
+            PUBLIC_HEADER DESTINATION ${_include_dir}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
     install_basic_package_files(${_target}
             EXPORT ${_target_export_name}
-            NAMESPACE ${_namespace}
+            NAMESPACE ${_namespace}::
             VERSION ${PROJECT_VERSION}
+            LOWERCASE_FILENAMES
+            #INSTALL_DESTINATION ${_destination}
             DEPENDENCIES ${_dependencies}
             COMPATIBILITY AnyNewerVersion)
 endfunction()

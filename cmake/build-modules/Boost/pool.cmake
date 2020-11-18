@@ -12,18 +12,24 @@ if (NOT TARGET boost_pool)
 
     _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS pool)
 
-    bcm_setup_version(VERSION 1.74.0)
-    add_library(boost_pool INTERFACE)
-    add_library(Boost::pool ALIAS boost_pool)
+    calm_add_library(${PROJECT_NAME} INTERFACE
+            INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
+            DEPENDENCIES Boost::thread Boost::assert Boost::type_traits Boost::integer Boost::config Boost::throw_exception
+            NAMESPACE Boost
+            EXPORT_NAME pool
+            )
+    #bcm_setup_version(VERSION 1.74.0)
+    #add_library(boost_pool INTERFACE)
+    #add_library(Boost::pool ALIAS boost_pool)
 
-    set_property(TARGET boost_pool PROPERTY EXPORT_NAME pool)
-    target_link_libraries(boost_pool INTERFACE Boost::thread)
-    target_link_libraries(boost_pool INTERFACE Boost::assert)
-    target_link_libraries(boost_pool INTERFACE Boost::type_traits)
-    target_link_libraries(boost_pool INTERFACE Boost::integer)
-    target_link_libraries(boost_pool INTERFACE Boost::config)
-    target_link_libraries(boost_pool INTERFACE Boost::throw_exception)
+    #set_property(TARGET boost_pool PROPERTY EXPORT_NAME pool)
+    #target_link_libraries(boost_pool INTERFACE Boost::thread)
+    #target_link_libraries(boost_pool INTERFACE Boost::assert)
+    #target_link_libraries(boost_pool INTERFACE Boost::type_traits)
+    #target_link_libraries(boost_pool INTERFACE Boost::integer)
+    #target_link_libraries(boost_pool INTERFACE Boost::config)
+    #target_link_libraries(boost_pool INTERFACE Boost::throw_exception)
 
-    bcm_deploy(TARGETS boost_pool INCLUDE ${boost_pool_SOURCE_DIR}/include NAMESPACE Boost::)
+    #bcm_deploy(TARGETS boost_pool INCLUDE ${boost_pool_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
 

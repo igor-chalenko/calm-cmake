@@ -11,17 +11,24 @@ if (NOT TARGET boost_ratio)
     project(boost_ratio VERSION 1.74.0)
     _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS ratio)
 
-    bcm_setup_version(VERSION 1.74.0)
-    add_library(boost_ratio INTERFACE)
-    add_library(Boost::ratio ALIAS boost_ratio)
-    set_property(TARGET boost_ratio PROPERTY EXPORT_NAME ratio)
-    target_link_libraries(boost_ratio INTERFACE Boost::config)
-    target_link_libraries(boost_ratio INTERFACE Boost::assert)
-    target_link_libraries(boost_ratio INTERFACE Boost::core)
-    target_link_libraries(boost_ratio INTERFACE Boost::integer)
-    target_link_libraries(boost_ratio INTERFACE Boost::static_assert)
-    target_link_libraries(boost_ratio INTERFACE Boost::throw_exception)
-    target_link_libraries(boost_ratio INTERFACE Boost::type_traits)
-    target_link_libraries(boost_ratio INTERFACE Boost::utility)
-    bcm_deploy(TARGETS boost_ratio INCLUDE ${boost_ratio_SOURCE_DIR}/include NAMESPACE Boost::)
+    calm_add_library(${PROJECT_NAME} INTERFACE
+            INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
+            DEPENDENCIES Boost::config Boost::assert Boost::core Boost::integer Boost::static_assert
+            Boost::throw_exception Boost::type_traits Boost::utility
+            NAMESPACE Boost
+            EXPORT_NAME ratio
+            )
+    #bcm_setup_version(VERSION 1.74.0)
+    #add_library(boost_ratio INTERFACE)
+    #add_library(Boost::ratio ALIAS boost_ratio)
+    #set_property(TARGET boost_ratio PROPERTY EXPORT_NAME ratio)
+    #target_link_libraries(boost_ratio INTERFACE Boost::config)
+    #target_link_libraries(boost_ratio INTERFACE Boost::assert)
+    #target_link_libraries(boost_ratio INTERFACE Boost::core)
+    #target_link_libraries(boost_ratio INTERFACE Boost::integer)
+    #target_link_libraries(boost_ratio INTERFACE Boost::static_assert)
+    #target_link_libraries(boost_ratio INTERFACE Boost::throw_exception)
+    #target_link_libraries(boost_ratio INTERFACE Boost::type_traits)
+    #target_link_libraries(boost_ratio INTERFACE Boost::utility)
+    #bcm_deploy(TARGETS boost_ratio INCLUDE ${boost_ratio_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()

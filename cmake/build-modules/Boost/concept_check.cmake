@@ -7,13 +7,20 @@ if (NOT TARGET boost_concept_check)
     project(boost_concept_check VERSION 1.74.0)
     _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS concept_check)
 
-    bcm_setup_version(VERSION 1.74.0)
-    add_library(boost_concept_check INTERFACE)
-    add_library(Boost::concept_check ALIAS boost_concept_check)
-    set_property(TARGET boost_concept_check PROPERTY EXPORT_NAME concept_check)
-    target_link_libraries(boost_concept_check INTERFACE Boost::type_traits)
-    target_link_libraries(boost_concept_check INTERFACE Boost::static_assert)
-    target_link_libraries(boost_concept_check INTERFACE Boost::preprocessor)
-    bcm_deploy(TARGETS boost_concept_check INCLUDE ${boost_concept_check_SOURCE_DIR}/include NAMESPACE Boost::)
+    calm_add_library(${PROJECT_NAME} INTERFACE
+            INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
+            DEPENDENCIES Boost::type_traits Boost::static_assert Boost::preprocessor
+            NAMESPACE Boost
+            EXPORT_NAME concept_check
+            )
+
+    #bcm_setup_version(VERSION 1.74.0)
+    #add_library(boost_concept_check INTERFACE)
+    #add_library(Boost::concept_check ALIAS boost_concept_check)
+    #set_property(TARGET boost_concept_check PROPERTY EXPORT_NAME concept_check)
+    #target_link_libraries(boost_concept_check INTERFACE Boost::type_traits)
+    #target_link_libraries(boost_concept_check INTERFACE Boost::static_assert)
+    #target_link_libraries(boost_concept_check INTERFACE Boost::preprocessor)
+    #bcm_deploy(TARGETS boost_concept_check INCLUDE ${boost_concept_check_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
 

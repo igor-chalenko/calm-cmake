@@ -54,6 +54,22 @@ if (NOT TARGET Boost::locale)
         target_compile_definitions(boost_locale PUBLIC BOOST_LOCALE_NO_STD_BACKEND=1)
     endif()
 
+    if(CMAKE_SYSTEM MATCHES "SunOS.*")
+        set(BOOST_LOCALE_WITH_STD Off CACHE BOOL "")
+    else()
+        set(BOOST_LOCALE_WITH_STD On CACHE BOOL "")
+    endif()
+
+    calm_add_library(${PROJECT_NAME} INTERFACE
+            INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
+            DEPENDENCIES Boost::core Boost::iterator Boost::functional Boost::regex Boost::optional
+            Boost::iterator Boost::mpl Boost::tuple Boost::smart_ptr Boost::static_assert
+            Boost::assert Boost::utility Boost::type_traits Boost::detail Boost::concept_check
+            Boost::preprocessor Boost::array Boost::thread Boost::numeric_conversion
+            NAMESPACE Boost
+            EXPORT_NAME locale
+            )
+
     if(ICONV_FOUND)
         target_compile_definitions(boost_locale PUBLIC BOOST_LOCALE_WITH_ICONV=1)
         target_link_libraries(boost_locale PUBLIC Iconv::Iconv)
@@ -96,26 +112,20 @@ if (NOT TARGET Boost::locale)
         target_compile_definitions(boost_locale PUBLIC BOOST_LOCALE_NO_POSIX_BACKEND=1)
     endif()
 
-    bcm_setup_version(VERSION 1.74.0)
-
-    if(CMAKE_SYSTEM MATCHES "SunOS.*")
-        set(BOOST_LOCALE_WITH_STD Off CACHE BOOL "")
-    else()
-        set(BOOST_LOCALE_WITH_STD On CACHE BOOL "")
-    endif()
+    #bcm_setup_version(VERSION 1.74.0)
 
     #add_library(boost_locale ${_sources})
     #target_include_directories(boost_locale PUBLIC ${boost_locale_SOURCE_DIR}/include)
-    add_library(Boost::locale ALIAS boost_locale)
+    #add_library(Boost::locale ALIAS boost_locale)
 
-    target_link_libraries(boost_locale PUBLIC Boost::function)
-    target_link_libraries(boost_locale PUBLIC Boost::static_assert)
-    target_link_libraries(boost_locale PUBLIC Boost::thread)
-    target_link_libraries(boost_locale PUBLIC Boost::iterator)
-    target_link_libraries(boost_locale PUBLIC Boost::assert)
-    target_link_libraries(boost_locale PUBLIC Boost::type_traits)
-    target_link_libraries(boost_locale PUBLIC Boost::smart_ptr)
-    target_link_libraries(boost_locale PUBLIC Boost::config)
-    target_link_libraries(boost_locale PUBLIC Boost::unordered)
-    bcm_deploy(TARGETS boost_locale INCLUDE ${boost_locale_SOURCE_DIR}/include NAMESPACE Boost::)
+    #target_link_libraries(boost_locale PUBLIC Boost::function)
+    #target_link_libraries(boost_locale PUBLIC Boost::static_assert)
+    #target_link_libraries(boost_locale PUBLIC Boost::thread)
+    #target_link_libraries(boost_locale PUBLIC Boost::iterator)
+    #target_link_libraries(boost_locale PUBLIC Boost::assert)
+    #target_link_libraries(boost_locale PUBLIC Boost::type_traits)
+    #target_link_libraries(boost_locale PUBLIC Boost::smart_ptr)
+    #target_link_libraries(boost_locale PUBLIC Boost::config)
+    #target_link_libraries(boost_locale PUBLIC Boost::unordered)
+    #bcm_deploy(TARGETS boost_locale INCLUDE ${boost_locale_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()

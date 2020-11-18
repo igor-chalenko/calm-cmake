@@ -12,17 +12,23 @@ if (NOT TARGET boost_utility)
     project(boost_utility VERSION 1.74.0)
     _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS utility)
 
-    bcm_setup_version(VERSION 1.74.0)
-    add_library(Boost::utility ALIAS boost_utility)
-    set_property(TARGET boost_utility PROPERTY EXPORT_NAME utility)
-    target_link_libraries(boost_utility INTERFACE Boost::core)
-    target_link_libraries(boost_utility INTERFACE Boost::container_hash)
-    target_link_libraries(boost_utility INTERFACE Boost::io)
-    target_link_libraries(boost_utility INTERFACE Boost::preprocessor)
-    target_link_libraries(boost_utility INTERFACE Boost::static_assert)
-    target_link_libraries(boost_utility INTERFACE Boost::throw_exception)
-    target_link_libraries(boost_utility INTERFACE Boost::type_traits)
-    bcm_deploy(TARGETS boost_utility INCLUDE ${boost_utility_SOURCE_DIR}/include NAMESPACE Boost::)
+    calm_add_library(${PROJECT_NAME} INTERFACE
+            INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
+            DEPENDENCIES Boost::core Boost::container_hash Boost::io Boost::preprocessor Boost::type_traits Boost::throw_exception
+            NAMESPACE Boost
+            EXPORT_NAME utility
+            )
+    #bcm_setup_version(VERSION 1.74.0)
+    #add_library(Boost::utility ALIAS boost_utility)
+    #set_property(TARGET boost_utility PROPERTY EXPORT_NAME utility)
+    #target_link_libraries(boost_utility INTERFACE Boost::core)
+    #target_link_libraries(boost_utility INTERFACE Boost::container_hash)
+    #target_link_libraries(boost_utility INTERFACE Boost::io)
+    #target_link_libraries(boost_utility INTERFACE Boost::preprocessor)
+    #target_link_libraries(boost_utility INTERFACE Boost::static_assert)
+    #target_link_libraries(boost_utility INTERFACE Boost::throw_exception)
+    #target_link_libraries(boost_utility INTERFACE Boost::type_traits)
+    #bcm_deploy(TARGETS boost_utility INCLUDE ${boost_utility_SOURCE_DIR}/include NAMESPACE Boost::)
 endif()
 
 
