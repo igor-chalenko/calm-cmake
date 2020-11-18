@@ -48,9 +48,17 @@ if (NOT TARGET boost_spirit)
 
     calm_add_library(${PROJECT_NAME} INTERFACE
             INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
-            DEPENDENCIES Boost::core Boost::config Boost::assert Boost::container_hash Boost::integer
-            Boost::iterator Boost::mpl Boost::predef Boost::smart_ptr Boost::static_assert
-            Boost::throw_exception Boost::type_traits Boost::variant
+            DEPENDENCIES Boost::predef Boost::locale Boost::tti Boost::concept_check
+            Boost::io Boost::serialization Boost::array Boost::unordered
+            Boost::iostreams Boost::utility Boost::regex Boost::static_assert
+            Boost::iterator Boost::proto Boost::type_traits Boost::smart_ptr Boost::config
+            Boost::math Boost::foreach Boost::function Boost::core Boost::phoenix
+            Boost::mpl Boost::filesystem Boost::variant Boost::lexical_cast Boost::throw_exception
+            Boost::assert Boost::fusion Boost::integer Boost::preprocessor
+            Boost::optional Boost::pool Boost::function_types Boost::thread
+            Boost::algorithm Boost::range Boost::typeof Boost::endian
+
+            Boost::throw_exception
             NAMESPACE Boost
             EXPORT_NAME spirit
             )
