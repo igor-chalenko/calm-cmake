@@ -21,8 +21,9 @@ if (NOT TARGET boost_iostreams)
 
     project(boost_iostreams VERSION 1.74.0)
     _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS iostreams)
+
     calm_add_library(${PROJECT_NAME}
-            SOURCES "${${PROJECT_NAME}_SOURCE_DIR}/src"
+            SOURCES "${${PROJECT_NAME}_SOURCE_DIR}/src/file_descriptor.cpp;${${PROJECT_NAME}_SOURCE_DIR}/src/mapped_file.cpp;${${PROJECT_NAME}_SOURCE_DIR}/src/gzip.cpp"
             INCLUDES "$<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>"
             DEPENDENCIES Boost::core Boost::regex Boost::static_assert Boost::function Boost::bind
             Boost::mpl Boost::random Boost::detail Boost::assert Boost::range
@@ -31,6 +32,19 @@ if (NOT TARGET boost_iostreams)
             NAMESPACE Boost
             EXPORT_NAME iostreams
             )
+
+    find_package(ZLIB)
+    find_package(BZip2)
+
+    if(ZLIB_FOUND)
+        target_link_libraries(boost_iostreams PUBLIC ZLIB::ZLIB)
+        target_sources(boost_iostreams PRIVATE ${${PROJECT_NAME}_SOURCE_DIR}/src/zlib.cpp)
+    endif()
+
+    if(BZip2_FOUND)
+        target_link_libraries(boost_iostreams PUBLIC BZip2::BZip2)
+        target_sources(boost_iostreams PRIVATE ${${PROJECT_NAME}_SOURCE_DIR}/src/bzip2.cpp)
+    endif()
 
     #add_library(boost_iostreams
     #        ${boost_iostreams_SOURCE_DIR}/src/gzip.cpp
