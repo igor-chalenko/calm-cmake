@@ -1,5 +1,8 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 
+get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+if (_cpm_initialized)
+
 if (NOT TARGET boost_random)
     include(${_current_dir}/build-modules/Boost/core.cmake)
     include(${_current_dir}/build-modules/Boost/static_assert.cmake)
@@ -45,4 +48,8 @@ if (NOT TARGET boost_random)
     #target_link_libraries(boost_random INTERFACE Boost::math)
     #target_link_libraries(boost_random INTERFACE Boost::utility)
     #bcm_deploy(TARGETS boost_random INCLUDE ${boost_random_SOURCE_DIR}/include NAMESPACE Boost::)
+endif()
+
+else()
+find_package(Boost REQUIRED COMPONENTS headers)
 endif()

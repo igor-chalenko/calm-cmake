@@ -1,4 +1,6 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
+get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+if (_cpm_initialized)
 
 if (NOT TARGET boost_filesystem)
     include(${_current_dir}/build-modules/Boost/core.cmake)
@@ -53,4 +55,8 @@ if (NOT TARGET boost_filesystem)
     #target_link_libraries(boost_filesystem INTERFACE Boost::config)
 
     #bcm_deploy(TARGETS boost_filesystem INCLUDE ${boost_filesystem_SOURCE_DIR}/include NAMESPACE boost::)
+endif()
+
+else()
+    find_package(Boost REQUIRED COMPONENTS filesystem)
 endif()

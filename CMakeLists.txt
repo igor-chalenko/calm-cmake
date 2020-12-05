@@ -6,7 +6,7 @@ include(cmake/Bootstrap.cmake)
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(cmake/3rd-party/ycm/modules/InstallBasicPackageFiles.cmake)
 
-    #add_subdirectory(i18n)
+    add_subdirectory(i18n)
 
     if (NOT DEFINED CMAKE_INSTALL_DATADIR)
         unset(CMAKE_INSTALL_DATADIR)
@@ -22,5 +22,5 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
             NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 
     # slash at the end remove `cmake` from the directory structure
-    #install(DIRECTORY "cmake/" DESTINATION ${_DESTINATION})
+    install(DIRECTORY "cmake/" DESTINATION ${_DESTINATION})
 endif()

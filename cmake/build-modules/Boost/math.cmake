@@ -1,4 +1,6 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
+get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+if (_cpm_initialized)
 
 if (NOT TARGET boost_math)
     add_library(boost_math INTERFACE)
@@ -30,8 +32,9 @@ if (NOT TARGET boost_math)
             INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
             DEPENDENCIES Boost::function Boost::core Boost::static_assert Boost::predef Boost::tuple Boost::array
             Boost::mpl Boost::atomic Boost::detail Boost::fusion Boost::assert
-            Boost::range Boost::type_traits Boost::concept_check Boost::smart_ptr Boost::lexical_cast Boost::utility
-            Boost::config Boost::throw_exception Boost::lambda
+            Boost::range Boost::type_traits Boost::concept_check Boost::smart_ptr
+            Boost::utility Boost::config Boost::throw_exception Boost::lambda
+            Boost::lexical_cast
             NAMESPACE Boost
             EXPORT_NAME math
             )
@@ -147,4 +150,9 @@ if (NOT TARGET boost_math)
     endif()
     #bcm_deploy(TARGETS boost_math INCLUDE ${boost_math_SOURCE_DIR}/include NAMESPACE Boost::)
 
+endif()
+
+else()
+    find_package(Boost REQUIRED COMPONENTS headers)
+    find_package(Boost REQUIRED COMPONENTS math)
 endif()

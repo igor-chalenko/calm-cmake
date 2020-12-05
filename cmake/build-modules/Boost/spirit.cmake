@@ -20,7 +20,7 @@ if (NOT TARGET boost_spirit)
     include(${_current_dir}/build-modules/Boost/type_traits.cmake)
     include(${_current_dir}/build-modules/Boost/smart_ptr.cmake)
     include(${_current_dir}/build-modules/Boost/config.cmake)
-    include(${_current_dir}/build-modules/Boost/math.cmake)
+    #include(${_current_dir}/build-modules/Boost/math.cmake)
     include(${_current_dir}/build-modules/Boost/foreach.cmake)
     include(${_current_dir}/build-modules/Boost/function.cmake)
     include(${_current_dir}/build-modules/Boost/core.cmake)
@@ -40,11 +40,16 @@ if (NOT TARGET boost_spirit)
     include(${_current_dir}/build-modules/Boost/range.cmake)
     include(${_current_dir}/build-modules/Boost/typeof.cmake)
     include(${_current_dir}/build-modules/Boost/endian.cmake)
-    include(${_current_dir}/build-modules/Boost/lexical_cast.cmake)
+    #include(${_current_dir}/build-modules/Boost/lexical_cast.cmake)
     include(${_current_dir}/build-modules/Boost/throw_exception.cmake)
 
     project(boost_spirit VERSION 1.74.0)
-    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS spirit)
+    get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+    if (_cpm_initialized)
+        _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS spirit)
+    else()
+        find_package(Boost REQUIRED COMPONENTS headers)
+    endif()
 
     calm_add_library(${PROJECT_NAME} INTERFACE
             INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
@@ -52,11 +57,13 @@ if (NOT TARGET boost_spirit)
             Boost::io Boost::serialization Boost::array Boost::unordered
             Boost::iostreams Boost::utility Boost::regex Boost::static_assert
             Boost::iterator Boost::proto Boost::type_traits Boost::smart_ptr Boost::config
-            Boost::math Boost::foreach Boost::function Boost::core Boost::phoenix
-            Boost::mpl Boost::filesystem Boost::variant Boost::lexical_cast Boost::throw_exception
+            Boost::foreach Boost::function Boost::core Boost::phoenix
+            Boost::mpl Boost::filesystem Boost::throw_exception
             Boost::assert Boost::fusion Boost::integer Boost::preprocessor
             Boost::optional Boost::pool Boost::function_types Boost::thread
             Boost::algorithm Boost::range Boost::typeof Boost::endian
+            Boost::headers
+            #Boost::lexical_cast Boost::math Boost::variant
 
             Boost::throw_exception
             NAMESPACE Boost

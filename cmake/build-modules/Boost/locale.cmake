@@ -1,4 +1,6 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
+get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+if (_cpm_initialized)
 
 if (NOT TARGET Boost::locale)
     include(${_current_dir}/build-modules/Boost/regex.cmake)
@@ -128,4 +130,8 @@ if (NOT TARGET Boost::locale)
     #target_link_libraries(boost_locale PUBLIC Boost::config)
     #target_link_libraries(boost_locale PUBLIC Boost::unordered)
     #bcm_deploy(TARGETS boost_locale INCLUDE ${boost_locale_SOURCE_DIR}/include NAMESPACE Boost::)
+endif()
+
+else()
+    find_package(Boost REQUIRED COMPONENTS locale)
 endif()

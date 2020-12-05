@@ -1,5 +1,8 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 
+get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+if (_cpm_initialized)
+
 if (NOT TARGET boost_variant)
     add_library(boost_variant INTERFACE)
     include(${_current_dir}/build-modules/Boost/core.cmake)
@@ -52,4 +55,8 @@ if (NOT TARGET boost_variant)
     #target_link_libraries(boost_variant INTERFACE Boost::utility)
     
     #bcm_deploy(TARGETS boost_variant INCLUDE ${boost_variant_SOURCE_DIR}/include NAMESPACE Boost::)
+endif()
+
+else()
+    find_package(Boost REQUIRED COMPONENTS headers)
 endif()

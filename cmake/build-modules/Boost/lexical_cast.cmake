@@ -1,4 +1,6 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
+get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+if (_cpm_initialized)
 
 if (NOT TARGET boost_lexical_cast)
     add_library(boost_lexical_cast INTERFACE)
@@ -47,4 +49,9 @@ if (NOT TARGET boost_lexical_cast)
     #target_link_libraries(boost_lexical_cast INTERFACE Boost::throw_exception)
     #target_link_libraries(boost_lexical_cast INTERFACE Boost::type_traits)
     #bcm_deploy(TARGETS boost_lexical_cast INCLUDE ${boost_lexical_cast_SOURCE_DIR}/include NAMESPACE Boost::)
+endif()
+
+else()
+    find_package(Boost REQUIRED COMPONENTS headers)
+    find_package(Boost REQUIRED COMPONENTS lexical_cast)
 endif()

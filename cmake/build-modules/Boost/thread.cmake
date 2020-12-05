@@ -1,4 +1,6 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
+get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+if (_cpm_initialized)
 
 if (NOT TARGET Boost::thread)
     include(${_current_dir}/build-modules/Boost/config.cmake)
@@ -99,4 +101,8 @@ if (NOT TARGET Boost::thread)
     #target_link_libraries(boost_thread PRIVATE Threads::Threads)
     #target_include_directories(boost_thread PRIVATE ${boost_thread_SOURCE_DIR}/include)
     #bcm_deploy(TARGETS boost_thread INCLUDE ${boost_thread_SOURCE_DIR}/include NAMESPACE Boost::)
+endif()
+
+else()
+    find_package(Boost REQUIRED COMPONENTS thread)
 endif()

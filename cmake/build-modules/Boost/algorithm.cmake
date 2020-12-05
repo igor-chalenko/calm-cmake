@@ -20,7 +20,12 @@ if (NOT TARGET boost_algorithm)
     include(${_current_dir}/build-modules/Boost/throw_exception.cmake)
 
     project(boost_algorithm VERSION 1.74.0)
-    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS algorithm)
+    get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+    if (_cpm_initialized)
+        _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS algorithm)
+    else()
+        find_package(Boost REQUIRED)
+    endif()
 
     calm_add_library(${PROJECT_NAME} INTERFACE
             INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>

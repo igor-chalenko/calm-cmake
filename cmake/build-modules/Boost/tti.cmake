@@ -1,7 +1,12 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 
 if (NOT TARGET boost_tti)
-    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS tti)
+    get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+    if (_cpm_initialized)
+        _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS tti)
+    else()
+        find_package(Boost REQUIRED)
+    endif()
 
     #bcm_setup_version(VERSION 1.74.0)
     #add_library(boost_tti INTERFACE)

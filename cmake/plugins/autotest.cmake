@@ -62,8 +62,9 @@ function(_calm_tests _for_target _sources)
                 INCLUDES "${_includes}"
                 SOURCES "${_file}"
                 TEST
-                DEPENDENCIES ${_test_dependencies} ${_for_target}
+                DEPENDENCIES ${_test_dependencies}
                 ${ARGN})
+        target_link_libraries(${_target} PRIVATE ${_for_target})
         if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.18)
             gtest_discover_tests(${_target} XML_OUTPUT_DIR "test-reports")
         else()

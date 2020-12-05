@@ -37,8 +37,15 @@ endfunction()
 
 function(_plugin_sanitizers_init)
     set(SANITIZE_ADDRESS ON)
-    _calm_find_package(Sanitizers)
-    list(PREPEND CMAKE_MODULE_PATH "${Sanitizers_SOURCE_DIR}/cmake")
+    #_calm_find_package(Sanitizers)
+
+    _package_directory(_current_dir)
+    set(_package_dir "${_current_dir}/3rd-party/Sanitizers")
+    if (IS_DIRECTORY "${_package_dir}")
+        list(PREPEND CMAKE_MODULE_PATH "${_package_dir}/cmake")
+    endif()
+
+    #list(PREPEND CMAKE_MODULE_PATH "${Sanitizers_SOURCE_DIR}/cmake")
     find_package(Sanitizers REQUIRED)
 endfunction()
 

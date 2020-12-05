@@ -10,7 +10,12 @@ if (NOT TARGET boost_pool)
 
     project(boost_pool VERSION 1.74.0)
 
-    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS pool)
+    get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+    if (_cpm_initialized)
+        _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS pool)
+    else()
+        find_package(Boost REQUIRED COMPONENTS headers)
+    endif()
 
     calm_add_library(${PROJECT_NAME} INTERFACE
             INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>

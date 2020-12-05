@@ -1,4 +1,6 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
+get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+if (_cpm_initialized)
 
 if (NOT TARGET boost_iostreams)
     include(${_current_dir}/build-modules/Boost/regex.cmake)
@@ -75,4 +77,8 @@ if (NOT TARGET boost_iostreams)
     #target_link_libraries(boost_iostreams INTERFACE Boost::throw_exception)
     #target_link_libraries(boost_iostreams INTERFACE Boost::utility)
     #bcm_deploy(TARGETS boost_iostreams INCLUDE ${boost_iostreams_SOURCE_DIR}/include NAMESPACE Boost::)
+endif()
+
+else()
+    find_package(Boost REQUIRED COMPONENTS iostreams)
 endif()
