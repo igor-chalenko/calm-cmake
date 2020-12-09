@@ -34,8 +34,6 @@ if (_cpm_initialized)
         if(BOOST_LOCALE_WITH_STD)
             list(APPEND _sources
                     "${boost_locale_SOURCE_DIR}/src/std/codecvt.cpp;${boost_locale_SOURCE_DIR}/src/std/collate.cpp;${boost_locale_SOURCE_DIR}/src/std/converter.cpp;${boost_locale_SOURCE_DIR}/src/std/numeric.cpp;${boost_locale_SOURCE_DIR}/src/std/std_backend.cpp;${boost_locale_SOURCE_DIR}/src/util/gregorian.cpp")
-        else()
-            target_compile_definitions(boost_locale PUBLIC BOOST_LOCALE_NO_STD_BACKEND=1)
         endif()
 
         if(CMAKE_SYSTEM MATCHES "SunOS.*")
@@ -55,6 +53,9 @@ if (_cpm_initialized)
                 EXPORT_NAME locale
                 )
 
+        if(NOT BOOST_LOCALE_WITH_STD)
+            target_compile_definitions(boost_locale PUBLIC BOOST_LOCALE_NO_STD_BACKEND=1)
+        endif()
         if(ICONV_FOUND)
             target_compile_definitions(boost_locale PUBLIC BOOST_LOCALE_WITH_ICONV=1)
             target_link_libraries(boost_locale PUBLIC Iconv::Iconv)
