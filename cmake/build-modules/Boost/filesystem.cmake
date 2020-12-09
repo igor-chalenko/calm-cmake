@@ -19,7 +19,7 @@ if (_cpm_initialized)
         project(boost_filesystem VERSION 1.74.0)
         _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS filesystem)
         set(_sources
-                "${boost_filesystem_SOURCE_DIR}/src/path_traits.cpp;${boost_filesystem_SOURCE_DIR}/src/portability.cpp;${boost_filesystem_SOURCE_DIR}/src/unique_path.cpp;${boost_filesystem_SOURCE_DIR}/src/path.cpp;${boost_filesystem_SOURCE_DIR}/src/windows_file_codecvt.cpp;${boost_filesystem_SOURCE_DIR}/src/operations.cpp;${boost_filesystem_SOURCE_DIR}/src/codecvt_error_category.cpp;${boost_filesystem_SOURCE_DIR}/src/utf8_codecvt_facet.cpp"
+                "${boost_filesystem_SOURCE_DIR}/src/directory.cpp;${boost_filesystem_SOURCE_DIR}/src/exception.cpp;${boost_filesystem_SOURCE_DIR}/src/path_traits.cpp;${boost_filesystem_SOURCE_DIR}/src/portability.cpp;${boost_filesystem_SOURCE_DIR}/src/unique_path.cpp;${boost_filesystem_SOURCE_DIR}/src/path.cpp;${boost_filesystem_SOURCE_DIR}/src/windows_file_codecvt.cpp;${boost_filesystem_SOURCE_DIR}/src/operations.cpp;${boost_filesystem_SOURCE_DIR}/src/codecvt_error_category.cpp;${boost_filesystem_SOURCE_DIR}/src/utf8_codecvt_facet.cpp"
                 )
 
         calm_add_library(${PROJECT_NAME}
