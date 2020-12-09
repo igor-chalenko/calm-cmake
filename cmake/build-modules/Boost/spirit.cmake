@@ -62,7 +62,7 @@ if (NOT TARGET boost_spirit)
             Boost::assert Boost::fusion Boost::integer Boost::preprocessor
             Boost::optional Boost::pool Boost::function_types Boost::thread
             Boost::algorithm Boost::range Boost::typeof Boost::endian
-            Boost::headers
+            #Boost::headers
             #Boost::lexical_cast Boost::math Boost::variant
 
             Boost::throw_exception
