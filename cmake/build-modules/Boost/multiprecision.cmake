@@ -32,7 +32,7 @@ if (NOT TARGET boost_multiprecision)
             INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
             DEPENDENCIES Boost::core Boost::static_assert Boost::assert Boost::mpl
             Boost::functional Boost::mpl Boost::predef Boost::smart_ptr Boost::static_assert
-            Boost::throw_exception Boost::assert Boost::array Boost::rational Boost::headers
+            Boost::throw_exception Boost::assert Boost::array Boost::rational #Boost::headers
             Boost::integer Boost::config Boost::array Boost::type_traits Boost::integer
             #Boost::lexical_cast #Boost::math #Boost::random
             NAMESPACE Boost
