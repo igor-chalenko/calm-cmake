@@ -30,7 +30,7 @@ to every target unconditionally, while others have to be requested.
 * `coverage` - enable code coverage reporting via `gcc` and `clang`;  
 * `install` - automatically install the given target with generated `*Config`,
   `*ConfigVersion`, and `*Targets` files;
-* `autotest` - discover GTest tests in the given directory and create a CTest 
+* `gtest` - discover GTest tests in the given directory and create a CTest 
   for each found test case;
 
 Build modules

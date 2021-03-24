@@ -1,11 +1,11 @@
 set(calm_ROOT_TEST_TARGET "all_tests"
             CACHE STRING "Name of the root test target")
 
-function(_plugin_autotest_manifest)
-    _calm_plugin_manifest(autotest
+function(_plugin_gtest_manifest)
+    _calm_plugin_manifest(gtest
             TARGET_TYPES main
             PARAMETERS TEST_SOURCES
-            OPTIONS AUTOTEST
+            OPTIONS GTEST
             DESCRIPTION [=[
 This plugin scans files in the subdirectory `test` of the current project
 and creates an executable target for each found file. The target is then used
@@ -13,12 +13,12 @@ as a basis for the `CTest` tests created by `gtest_discover_tests`.
 ]=])
 endfunction()
 
-function(_plugin_autotest_init)
+function(_plugin_gtest_init)
     add_custom_target(${calm_ROOT_TEST_TARGET}
             COMMENT "Build and run all the tests.")
 endfunction()
 
-function(_plugin_autotest_apply _target)
+function(_plugin_gtest_apply _target)
     if (${ARGV1})
         set(_test_sources "${ARGV1}")
     endif()

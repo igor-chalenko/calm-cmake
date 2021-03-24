@@ -7,6 +7,7 @@ function(_plugin_install_manifest)
     _calm_plugin_manifest(install
             TARGET_TYPES main
             PARAMETERS NAMESPACE
+            OPTIONS INSTALL
             DESCRIPTION [[
 This plugin constructs install commands for the given target.]])
 

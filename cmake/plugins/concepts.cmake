@@ -80,6 +80,7 @@ function(_plugin_concepts_init)
 endfunction()
 
 function(_plugin_concepts_apply _target)
+    message(STATUS "[${_target}] `concepts`")
     get_target_property(_type ${_target} TYPE)
     if (${_type} STREQUAL INTERFACE_LIBRARY)
         set_target_properties(${_target}
