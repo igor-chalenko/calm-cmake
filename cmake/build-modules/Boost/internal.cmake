@@ -37,7 +37,6 @@ function(_calm_init_library _lib_name _lib_alt_name)
         endforeach()
 
         find_package(Boost REQUIRED COMPONENTS ${_lib_alt_name})
-        message(STATUS "[${_lib_name}] depend on ${_deps}")
 
         # if (NOT TARGET Boost::${_lib_name})
         calm_add_library(boost_${_lib_name} INTERFACE
