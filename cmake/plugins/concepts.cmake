@@ -56,6 +56,7 @@ function(_plugin_concepts_init)
     if (NOT HAVE_CXX_CONCEPTS)
         set(CMAKE_REQUIRED_FLAGS -fconcepts)
         check_cxx_source_compiles("${code}" HAVE_CXX_CONCEPTS_WITH_FCONCEPTS)
+        message(STATUS "HAVE_CXX_CONCEPTS_WITH_FCONCEPTS = ${HAVE_CXX_CONCEPTS_WITH_FCONCEPTS}")
         if (NOT HAVE_CXX_CONCEPTS_WITH_FCONCEPTS)
             set(CMAKE_REQUIRED_DEFINITIONS "-Dconcept=concept\\ bool")
             if (CMAKE_REQUIRED_DEFINITIONS)
@@ -79,10 +80,10 @@ function(_plugin_concepts_init)
     endif ()
 endfunction()
 
-function(_plugin_concepts_apply _target)
-    message(STATUS "[${_target}] `concepts`")
+function(_plugin_concepts_apply_2 _target)
     get_target_property(_type ${_target} TYPE)
     if (${_type} STREQUAL INTERFACE_LIBRARY)
+        message(STATUS "[${_target}] `concepts` for an INTERFACE library")
         set_target_properties(${_target}
                 PROPERTIES
                 INTERFACE_CXX_STANDARD 20
@@ -90,6 +91,7 @@ function(_plugin_concepts_apply _target)
                 INTERFACE_CXX_EXTENSIONS NO
                 )
     else()
+        message(STATUS "[${_target}] `concepts` for a library/executable")
         set_target_properties(${_target}
                 PROPERTIES
                 CXX_STANDARD 20
@@ -99,7 +101,7 @@ function(_plugin_concepts_apply _target)
     endif ()
 endfunction()
 
-function(_plugin_concepts_apply_2 _target)
+function(_plugin_concepts_apply _target)
     set(_plugin_target "CXX::Concepts")
     if (TARGET CXX::Concepts)
         get_target_property(_type ${_target} TYPE)

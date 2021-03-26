@@ -1,62 +1,10 @@
-get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
-
-get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
-if (_cpm_initialized)
-
 if (NOT TARGET boost_variant)
-    add_library(boost_variant INTERFACE)
-    include(${_current_dir}/build-modules/Boost/core.cmake)
-    include(${_current_dir}/build-modules/Boost/static_assert.cmake)
-    include(${_current_dir}/build-modules/Boost/bind.cmake)
-    include(${_current_dir}/build-modules/Boost/mpl.cmake)
-    include(${_current_dir}/build-modules/Boost/move.cmake)
-    include(${_current_dir}/build-modules/Boost/detail.cmake)
-    include(${_current_dir}/build-modules/Boost/functional.cmake)
-    include(${_current_dir}/build-modules/Boost/assert.cmake)
-    include(${_current_dir}/build-modules/Boost/type_traits.cmake)
-    include(${_current_dir}/build-modules/Boost/type_index.cmake)
-    include(${_current_dir}/build-modules/Boost/preprocessor.cmake)
-    include(${_current_dir}/build-modules/Boost/config.cmake)
-    include(${_current_dir}/build-modules/Boost/throw_exception.cmake)
-    include(${_current_dir}/build-modules/Boost/math.cmake)
-    include(${_current_dir}/build-modules/Boost/utility.cmake)
+    set(_dependencies core static_assert bind mpl move detail functional assert
+            type_traits type_index preprocessor config throw_exception math
+            utility)
 
-    project(boost_variant VERSION 1.74.0)
+    set(_lib_name variant)
+    set(_lib_alt_name headers)
 
-    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS variant)
-
-    calm_add_library(${PROJECT_NAME} INTERFACE
-            INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
-            DEPENDENCIES Boost::core Boost::static_assert Boost::mpl Boost::preprocessor Boost::type_traits
-            Boost::move Boost::detail Boost::functional Boost::assert Boost::type_index
-            Boost::config Boost::throw_exception Boost::math Boost::utility
-            NAMESPACE Boost
-            EXPORT_NAME variant
-            )
-
-    #bcm_setup_version(VERSION 1.74.0)
-    #add_library(Boost::variant ALIAS boost_variant)
-
-    #set_property(TARGET boost_variant PROPERTY EXPORT_NAME variant)
-    #target_link_libraries(boost_variant INTERFACE Boost::core)
-    #target_link_libraries(boost_variant INTERFACE Boost::static_assert)
-    #target_link_libraries(boost_variant INTERFACE Boost::bind)
-    #target_link_libraries(boost_variant INTERFACE Boost::mpl)
-    #target_link_libraries(boost_variant INTERFACE Boost::move)
-    #target_link_libraries(boost_variant INTERFACE Boost::detail)
-    #target_link_libraries(boost_variant INTERFACE Boost::functional)
-    #target_link_libraries(boost_variant INTERFACE Boost::assert)
-    #target_link_libraries(boost_variant INTERFACE Boost::type_traits)
-    #target_link_libraries(boost_variant INTERFACE Boost::type_index)
-    #target_link_libraries(boost_variant INTERFACE Boost::preprocessor)
-    #target_link_libraries(boost_variant INTERFACE Boost::config)
-    #target_link_libraries(boost_variant INTERFACE Boost::throw_exception)
-    #target_link_libraries(boost_variant INTERFACE Boost::math)
-    #target_link_libraries(boost_variant INTERFACE Boost::utility)
-    
-    #bcm_deploy(TARGETS boost_variant INCLUDE ${boost_variant_SOURCE_DIR}/include NAMESPACE Boost::)
-endif()
-
-else()
-    find_package(Boost REQUIRED COMPONENTS headers)
+    include(${_current_dir}/build-modules/Boost/internal.cmake)
 endif()

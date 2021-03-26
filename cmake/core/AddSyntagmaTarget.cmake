@@ -93,9 +93,22 @@ function(_calm_add_target _target _type)
     unset(ARG_DEPENDENCIES)
     unset(ARG_NAMESPACE)
 
+    set(_unique_options "")
+    foreach(_option ${_options})
+        if (NOT _option IN_LIST _unique_options)
+            list(APPEND _unique_options ${_option})
+        endif()
+    endforeach()
+    set(_unique_params "")
+    foreach(_param ${_one_value_args})
+        if (NOT _param IN_LIST _unique_params)
+            list(APPEND _unique_params ${_param})
+        endif()
+    endforeach()
+
     cmake_parse_arguments(ARG
-            "${_options}"
-            "${_one_value_args}"
+            "${_unique_options}"
+            "${_unique_params}"
             "${_multi_value_args}" ${ARGN})
 
     if (ARG_UNPARSED_ARGUMENTS)
@@ -126,9 +139,6 @@ endfunction()
 
 function(_calm_set_target_sources _target _sources)
     if (NOT ARG_INTERFACE)
-        if (NOT _sources AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src")
-            set(_sources "${CMAKE_CURRENT_SOURCE_DIR}/src")
-        endif ()
         if (_sources)
             set(_all_files "")
             foreach(_source ${_sources})
@@ -144,6 +154,7 @@ function(_calm_set_target_sources _target _sources)
                     add_executable(${_target} "${_all_files}")
                 else ()
                     add_library(${_target} "${_all_files}")
+                    message(STATUS "create library ${_target}")
                 endif ()
             else ()
                 target_sources(${_target} PRIVATE "${_all_files}")

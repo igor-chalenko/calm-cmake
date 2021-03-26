@@ -1,40 +1,8 @@
-get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
-
 if (NOT TARGET boost_pool)
-    include(${_current_dir}/build-modules/Boost/thread.cmake)
-    include(${_current_dir}/build-modules/Boost/assert.cmake)
-    include(${_current_dir}/build-modules/Boost/type_traits.cmake)
-    include(${_current_dir}/build-modules/Boost/integer.cmake)
-    include(${_current_dir}/build-modules/Boost/config.cmake)
-    include(${_current_dir}/build-modules/Boost/throw_exception.cmake)
+    set(_lib_name pool)
+    set(_lib_alt_name headers)
+    set(_dependencies thread assert integer config throw_exception)
 
-    project(boost_pool VERSION 1.74.0)
-
-    get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
-    if (_cpm_initialized)
-        _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS pool)
-    else()
-        find_package(Boost REQUIRED COMPONENTS headers)
-    endif()
-
-    calm_add_library(${PROJECT_NAME} INTERFACE
-            INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
-            DEPENDENCIES Boost::thread Boost::assert Boost::type_traits Boost::integer Boost::config Boost::throw_exception
-            NAMESPACE Boost
-            EXPORT_NAME pool
-            )
-    #bcm_setup_version(VERSION 1.74.0)
-    #add_library(boost_pool INTERFACE)
-    #add_library(Boost::pool ALIAS boost_pool)
-
-    #set_property(TARGET boost_pool PROPERTY EXPORT_NAME pool)
-    #target_link_libraries(boost_pool INTERFACE Boost::thread)
-    #target_link_libraries(boost_pool INTERFACE Boost::assert)
-    #target_link_libraries(boost_pool INTERFACE Boost::type_traits)
-    #target_link_libraries(boost_pool INTERFACE Boost::integer)
-    #target_link_libraries(boost_pool INTERFACE Boost::config)
-    #target_link_libraries(boost_pool INTERFACE Boost::throw_exception)
-
-    #bcm_deploy(TARGETS boost_pool INCLUDE ${boost_pool_SOURCE_DIR}/include NAMESPACE Boost::)
+    include(${_current_dir}/build-modules/Boost/internal.cmake)
 endif()
 

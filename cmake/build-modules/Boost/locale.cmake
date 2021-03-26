@@ -1,30 +1,19 @@
-get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
-get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
-if (_cpm_initialized)
+if (NOT TARGET Boost::locale)
+    set(_dependencies regex core static_assert iterator tuple optional mpl
+            functional detail assert type_traits concept_check preprocessor
+            array thread numeric_conversion utility)
+    set(_lib_name locale)
+    set(_lib_alt_name locale)
 
-    if (NOT TARGET Boost::locale)
-        include(${_current_dir}/build-modules/Boost/regex.cmake)
-        include(${_current_dir}/build-modules/Boost/core.cmake)
-        include(${_current_dir}/build-modules/Boost/static_assert.cmake)
-        include(${_current_dir}/build-modules/Boost/iterator.cmake)
-        include(${_current_dir}/build-modules/Boost/tuple.cmake)
-        include(${_current_dir}/build-modules/Boost/optional.cmake)
-        include(${_current_dir}/build-modules/Boost/mpl.cmake)
-        include(${_current_dir}/build-modules/Boost/functional.cmake)
-        include(${_current_dir}/build-modules/Boost/detail.cmake)
-        include(${_current_dir}/build-modules/Boost/assert.cmake)
-        include(${_current_dir}/build-modules/Boost/type_traits.cmake)
-        include(${_current_dir}/build-modules/Boost/concept_check.cmake)
-        include(${_current_dir}/build-modules/Boost/preprocessor.cmake)
-        include(${_current_dir}/build-modules/Boost/array.cmake)
-        include(${_current_dir}/build-modules/Boost/thread.cmake)
-        include(${_current_dir}/build-modules/Boost/numeric_conversion.cmake)
-        include(${_current_dir}/build-modules/Boost/utility.cmake)
+    get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
+    get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
 
-        project(boost_locale VERSION 1.74.0)
-        _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS locale)
+    set(_deps "")
+    foreach (_dep ${_dependencies})
+        list(APPEND _deps Boost::${_dep})
+    endforeach()
 
-        # todo ?
+    if (_cpm_initialized)
         find_package(ICU COMPONENTS uc dt in)
         find_package(Iconv)
 
@@ -45,10 +34,7 @@ if (_cpm_initialized)
         calm_add_library(${PROJECT_NAME}
                 SOURCES ${_sources}
                 INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
-                DEPENDENCIES Boost::core Boost::iterator Boost::functional Boost::regex Boost::optional
-                Boost::iterator Boost::mpl Boost::tuple Boost::smart_ptr Boost::static_assert
-                Boost::assert Boost::utility Boost::type_traits Boost::detail Boost::concept_check
-                Boost::preprocessor Boost::array Boost::thread Boost::numeric_conversion
+                DEPENDENCIES ${_deps}
                 NAMESPACE Boost
                 EXPORT_NAME locale
                 )
@@ -97,25 +83,8 @@ if (_cpm_initialized)
         else()
             target_compile_definitions(boost_locale PUBLIC BOOST_LOCALE_NO_POSIX_BACKEND=1)
         endif()
-
-        #bcm_setup_version(VERSION 1.74.0)
-
-        #add_library(boost_locale ${_sources})
-        #target_include_directories(boost_locale PUBLIC ${boost_locale_SOURCE_DIR}/include)
-        #add_library(Boost::locale ALIAS boost_locale)
-
-        #target_link_libraries(boost_locale PUBLIC Boost::function)
-        #target_link_libraries(boost_locale PUBLIC Boost::static_assert)
-        #target_link_libraries(boost_locale PUBLIC Boost::thread)
-        #target_link_libraries(boost_locale PUBLIC Boost::iterator)
-        #target_link_libraries(boost_locale PUBLIC Boost::assert)
-        #target_link_libraries(boost_locale PUBLIC Boost::type_traits)
-        #target_link_libraries(boost_locale PUBLIC Boost::smart_ptr)
-        #target_link_libraries(boost_locale PUBLIC Boost::config)
-        #target_link_libraries(boost_locale PUBLIC Boost::unordered)
-        #bcm_deploy(TARGETS boost_locale INCLUDE ${boost_locale_SOURCE_DIR}/include NAMESPACE Boost::)
+    else()
+        find_package(Boost REQUIRED COMPONENTS ${_lib_alt_name})
     endif()
-
-else()
-    find_package(Boost REQUIRED COMPONENTS locale)
 endif()
+

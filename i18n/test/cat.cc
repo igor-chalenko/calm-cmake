@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <boost/algorithm/clamp.hpp>
 template <typename T>
 concept Animal = requires(T a) {
     { a.make_sound() };
