@@ -22,7 +22,7 @@ function(_calm_init_serialization _dependencies)
                 EXPORT_NAME serialization
                 )
     else()
-        find_package(Boost REQUIRED COMPONENTS ${_lib_alt_name})
+        find_package(Boost REQUIRED COMPONENTS serialization)
     endif()
 endfunction()
 

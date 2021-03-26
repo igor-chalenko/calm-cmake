@@ -7,6 +7,7 @@
 
 #include <string>
 #include <fmt/format.h>
+#include <boost/predef.h>
 #include "localized_text_store.h"
 
 namespace syntagma::i18n {

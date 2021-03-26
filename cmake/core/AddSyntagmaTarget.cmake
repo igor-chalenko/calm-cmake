@@ -232,7 +232,6 @@ function(_calm_include_recipe _dependency)
     _calm_parse_target_name(${_dependency} _dep_namespace _dep_name)
     _calm_get_managed_version(${_dependency} _git_tag)
     if (NOT _git_tag)
-        message(STATUS "_dependency = ${_dependency}, _dep_namespace = ${_dep_namespace}")
         _calm_get_managed_version(${_dep_namespace} _git_tag)
     endif()
 
