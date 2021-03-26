@@ -21,5 +21,5 @@ calm_add_library(${PROJECT_NAME}
         SANITIZE_ADDRESS
         GTEST
         INSTALL
-        DEPENDENCIES fmt::fmt Boost::assert)
+        DEPENDENCIES fmt::fmt Boost::spirit)
 

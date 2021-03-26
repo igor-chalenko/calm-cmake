@@ -1,6 +1,4 @@
 if (NOT TARGET boost_move)
-    set(_lib_name move)
-    set(_lib_alt_name headers)
-    set(_dependencies assert core static_assert config)
     include(${_current_dir}/build-modules/Boost/internal.cmake)
+    _calm_init_library(move headers core assert core static_assert config)
 endif()

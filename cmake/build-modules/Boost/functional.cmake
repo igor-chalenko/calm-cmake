@@ -1,10 +1,4 @@
-if (NOT TARGET boost_functional)
-    set(_lib_name functional)
-    set(_lib_alt_name headers)
-    set(_dependencies core iterator integer optional static_assert mpl
-            throw_exception function function_types detail assert type_traits
-            concept_check typeof preprocessor optional config utility)
-
+function(_calm_init_functional _dependencies)
     get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
     get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
 
@@ -19,21 +13,30 @@ if (NOT TARGET boost_functional)
         endforeach()
 
         # Boost::functional doesn't provide CMakeLists.txt as of Feb 21
-        _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS ${_lib_name})
+        _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS functional)
 
-        calm_add_library(${_lib_name} INTERFACE
+        calm_add_library(functional INTERFACE
                 INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
                 DEPENDENCIES ${_deps}
                 NAMESPACE Boost
-                EXPORT_NAME ${_lib_name}
+                EXPORT_NAME functional
                 )
     else()
-        find_package(Boost REQUIRED COMPONENTS ${_lib_alt_name})
-        calm_add_library(boost_${_lib_name} INTERFACE
+        find_package(Boost REQUIRED COMPONENTS headers)
+        calm_add_library(boost_functional INTERFACE
                 INCLUDES $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}/include>;$<INSTALL_INTERFACE:include>
                 DEPENDENCIES ${_deps}
                 NAMESPACE Boost
-                EXPORT_NAME ${_lib_name}
+                EXPORT_NAME functional
                 )
     endif()
+
+endfunction()
+
+if (NOT TARGET boost_functional)
+    _calm_init_functional(core iterator integer optional static_assert mpl
+            throw_exception function function_types detail assert type_traits
+            concept_check typeof preprocessor optional config utility)
+
+
 endif()

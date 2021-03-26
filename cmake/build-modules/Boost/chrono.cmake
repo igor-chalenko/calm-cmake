@@ -1,9 +1,7 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 if (NOT TARGET boost_chrono)
-    set(_lib_name chrono)
-    set(_lib_alt_name headers)
-    set(_dependencies
-            config
+    include(${_current_dir}/build-modules/Boost/internal.cmake)
+    _calm_init_library(chrono headers config
             core
             integer
             move
@@ -14,8 +12,5 @@ if (NOT TARGET boost_chrono)
             system
             throw_exception
             type_traits
-            typeof utility
-            )
-
-    include(${_current_dir}/build-modules/Boost/internal.cmake)
+            typeof utility)
 endif ()

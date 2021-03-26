@@ -1,6 +1,4 @@
 if (NOT TARGET boost_align)
-    set(_lib_name align)
-    set(_lib_alt_name headers)
-    set(_dependencies config assert type_traits)
     include(${_current_dir}/build-modules/Boost/internal.cmake)
+    _calm_init_library(align headers config assert type_traits)
 endif()

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
+#include <boost/filesystem.hpp>
 
-#include <boost/algorithm/clamp.hpp>
 template <typename T>
 concept Animal = requires(T a) {
     { a.make_sound() };
@@ -20,4 +20,15 @@ struct Cat {
 TEST(cat, main) { // NOLINT
     Cat c;
     make_sound(c);
+
+    namespace fs = boost::filesystem;
+
+    // get a path that is known to exist
+    fs::path cp = fs::current_path();
+
+    // demo: get tstring from the path
+    auto cp_as_tstring = cp.string<std::string>();
+
+    // demo: pass tstring to filesystem function taking path
+    assert( fs::exists( cp_as_tstring ) );
 }

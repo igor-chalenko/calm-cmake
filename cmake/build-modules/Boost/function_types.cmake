@@ -1,6 +1,5 @@
 if (NOT TARGET boost_function_types)
-    set(_lib_name function_types)
-    set(_lib_alt_name headers)
-    set(_dependencies core detail mpl preprocessor type_traits)
     include(${_current_dir}/build-modules/Boost/internal.cmake)
+    _calm_init_library(function_types headers core detail mpl preprocessor
+            type_traits)
 endif()

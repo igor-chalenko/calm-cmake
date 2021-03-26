@@ -1,6 +1,5 @@
 if (NOT TARGET boost_numeric_conversion)
-    set(_lib_name numeric_conversion)
-    set(_lib_alt_name headers)
-    set(_dependencies core smart_ptr throw_exception type_traits typeof)
     include(${_current_dir}/build-modules/Boost/internal.cmake)
+    _calm_init_library(numeric_conversion headers core smart_ptr throw_exception
+            type_traits typeof)
 endif()

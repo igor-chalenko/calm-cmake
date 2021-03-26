@@ -1,6 +1,5 @@
 if (NOT TARGET boost_exception)
-    set(_lib_name exception)
-    set(_lib_alt_name headers)
-    set(_dependencies core smart_ptr throw_exception tuple type_traits)
     include(${_current_dir}/build-modules/Boost/internal.cmake)
+    _calm_init_library(exception headers core smart_ptr throw_exception tuple
+            type_traits)
 endif()

@@ -1,6 +1,5 @@
 if (NOT TARGET boost_atomic)
-    set(_lib_name atomic)
-    set(_lib_alt_name headers)
-    set(_dependencies config assert static_assert type_traits align predef preprocessor)
     include(${_current_dir}/build-modules/Boost/internal.cmake)
+    _calm_init_library(atomic headers config assert static_assert type_traits
+            align predef preprocessor)
 endif()
