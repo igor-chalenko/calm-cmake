@@ -3,7 +3,7 @@ endfunction()
 
 function(_plugin_debug_postfix_manifest)
     _calm_plugin_manifest(debug_postfix
-            TARGET_TYPES build
+            TARGET_TYPES main
             REQUIRED
             DESCRIPTION [=[
 Plugin `debug_postfix` enables `DEBUG_POSTFIX` property for the given targets.
