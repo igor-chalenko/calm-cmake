@@ -1,8 +1,11 @@
-function(_calm_init_thread _dependencies)
+function(_calm_init_thread)
     get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
     get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
 
     if (_cpm_initialized)
+        foreach (_dep ${ARGN})
+            include(${_current_dir}/build-modules/Boost/${_dep}.cmake)
+        endforeach()
         _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS thread)
     else()
         find_package(Boost REQUIRED COMPONENTS thread)

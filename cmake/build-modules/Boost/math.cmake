@@ -1,20 +1,18 @@
-if (NOT TARGET boost_math)
-    set(_dependencies function core static_assert predef tuple array
-            mpl atomic detail fusion assert range type_traits
-            concept_check smart_ptr lexical_cast utility config
-            throw_exception lambda)
-
+function(_calm_init_math)
+    # stop recursion
     get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
     get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
 
-    set(_deps "")
-    foreach (_dep ${_dependencies})
-        list(APPEND _deps Boost::${_dep})
-    endforeach()
-
     if (_cpm_initialized)
-        foreach (_dep ${_dependencies})
-            include(${_current_dir}/build-modules/Boost/${_dep}.cmake)
+        foreach (_dep ${ARGN})
+            if (NOT TARGET boost_${_dep})
+                include(${_current_dir}/build-modules/Boost/${_dep}.cmake)
+            endif()
+        endforeach()
+
+        set(_deps "")
+        foreach (_dep ${ARGN})
+            list(APPEND _deps Boost::${_dep})
         endforeach()
 
         # Boost::math doesn't provide CMakeLists.txt as of Feb 21
@@ -29,9 +27,6 @@ if (NOT TARGET boost_math)
                     )
 
             include(CheckTypeSize)
-
-            #set(boost_math_SOURCE_DIR ${Boost_I})
-            #message(STATUS "!!! ${boost_math_SOURCE_DIR}")
 
             set(BOOST_MATH_c99_SOURCES
                     ${boost_math_SOURCE_DIR}/src/tr1/acosh
@@ -126,4 +121,11 @@ if (NOT TARGET boost_math)
                 EXPORT_NAME math
                 )
     endif()
+endfunction()
+
+if (NOT TARGET boost_math)
+    _calm_init_math(function core static_assert predef tuple array
+            mpl atomic detail fusion assert range type_traits
+            concept_check smart_ptr lexical_cast utility config
+            throw_exception lambda)
 endif()

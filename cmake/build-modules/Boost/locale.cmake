@@ -1,23 +1,19 @@
-function(_calm_init_locale _dependencies)
+function(_calm_init_locale)
     get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
     get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
 
     set(_deps "")
-    foreach (_dep ${_dependencies})
+    foreach (_dep ${ARGN})
         list(APPEND _deps Boost::${_dep})
     endforeach()
 
     if (_cpm_initialized)
+        foreach (_dep ${ARGN})
+            include(${_current_dir}/build-modules/Boost/${_dep}.cmake)
+        endforeach()
+
         find_package(ICU COMPONENTS uc dt in)
         find_package(Iconv)
-
-        set(_sources
-                "${boost_locale_SOURCE_DIR}/src/encoding/codepage.cpp;${boost_locale_SOURCE_DIR}/src/shared/date_time.cpp;${boost_locale_SOURCE_DIR}/src/shared/format.cpp;${boost_locale_SOURCE_DIR}/src/shared/formatting.cpp;${boost_locale_SOURCE_DIR}/src/shared/generator.cpp;${boost_locale_SOURCE_DIR}/src/shared/ids.cpp;${boost_locale_SOURCE_DIR}/src/shared/localization_backend.cpp;${boost_locale_SOURCE_DIR}/src/shared/message.cpp;${boost_locale_SOURCE_DIR}/src/shared/mo_lambda.cpp;${boost_locale_SOURCE_DIR}/src/util/codecvt_converter.cpp;${boost_locale_SOURCE_DIR}/src/util/gregorian.cpp;${boost_locale_SOURCE_DIR}/src/util/default_locale.cpp;${boost_locale_SOURCE_DIR}/src/util/info.cpp;${boost_locale_SOURCE_DIR}/src/util/locale_data.cpp"
-                )
-        if(BOOST_LOCALE_WITH_STD)
-            list(APPEND _sources
-                    "${boost_locale_SOURCE_DIR}/src/std/codecvt.cpp;${boost_locale_SOURCE_DIR}/src/std/collate.cpp;${boost_locale_SOURCE_DIR}/src/std/converter.cpp;${boost_locale_SOURCE_DIR}/src/std/numeric.cpp;${boost_locale_SOURCE_DIR}/src/std/std_backend.cpp;${boost_locale_SOURCE_DIR}/src/util/gregorian.cpp")
-        endif()
 
         if(CMAKE_SYSTEM MATCHES "SunOS.*")
             set(BOOST_LOCALE_WITH_STD Off CACHE BOOL "")
@@ -27,7 +23,15 @@ function(_calm_init_locale _dependencies)
 
         _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS locale)
 
-        if (NOT ${boost_locale_SOURCE_DIR})
+        if (DEFINED boost_locale_SOURCE_DIR)
+            set(_sources
+                    "${boost_locale_SOURCE_DIR}/src/encoding/codepage.cpp;${boost_locale_SOURCE_DIR}/src/shared/date_time.cpp;${boost_locale_SOURCE_DIR}/src/shared/format.cpp;${boost_locale_SOURCE_DIR}/src/shared/formatting.cpp;${boost_locale_SOURCE_DIR}/src/shared/generator.cpp;${boost_locale_SOURCE_DIR}/src/shared/ids.cpp;${boost_locale_SOURCE_DIR}/src/shared/localization_backend.cpp;${boost_locale_SOURCE_DIR}/src/shared/message.cpp;${boost_locale_SOURCE_DIR}/src/shared/mo_lambda.cpp;${boost_locale_SOURCE_DIR}/src/util/codecvt_converter.cpp;${boost_locale_SOURCE_DIR}/src/util/gregorian.cpp;${boost_locale_SOURCE_DIR}/src/util/default_locale.cpp;${boost_locale_SOURCE_DIR}/src/util/info.cpp;${boost_locale_SOURCE_DIR}/src/util/locale_data.cpp"
+                    )
+            if(BOOST_LOCALE_WITH_STD)
+                list(APPEND _sources
+                        "${boost_locale_SOURCE_DIR}/src/std/codecvt.cpp;${boost_locale_SOURCE_DIR}/src/std/collate.cpp;${boost_locale_SOURCE_DIR}/src/std/converter.cpp;${boost_locale_SOURCE_DIR}/src/std/numeric.cpp;${boost_locale_SOURCE_DIR}/src/std/std_backend.cpp;${boost_locale_SOURCE_DIR}/src/util/gregorian.cpp")
+            endif()
+
             calm_add_library(boost_locale
                     SOURCES ${_sources}
                     INCLUDES $<BUILD_INTERFACE:${boost_locale_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
@@ -91,6 +95,6 @@ endfunction()
 if (NOT TARGET Boost::locale)
     _calm_init_locale(regex core static_assert iterator tuple optional mpl
             functional detail assert type_traits concept_check preprocessor
-            array thread numeric_conversion utility)
+            array thread conversion numeric_conversion utility)
 endif()
 

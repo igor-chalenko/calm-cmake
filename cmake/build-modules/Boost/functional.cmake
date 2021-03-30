@@ -1,14 +1,14 @@
-function(_calm_init_functional _dependencies)
+function(_calm_init_functional)
     get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
     get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
 
     set(_deps "")
-    foreach (_dep ${_dependencies})
+    foreach (_dep ${ARGN})
         list(APPEND _deps Boost::${_dep})
     endforeach()
 
     if (_cpm_initialized)
-        foreach (_dep ${_dependencies})
+        foreach (_dep ${ARGN})
             include(${_current_dir}/build-modules/Boost/${_dep}.cmake)
         endforeach()
 
