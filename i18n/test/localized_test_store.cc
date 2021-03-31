@@ -7,7 +7,7 @@
 /// @details todo add some details
 
 #include <locale>
-#include <gtest/gtest.h>
+#include <catch2/catch_all.hpp>
 
 #include "syntagma/i18n/localized_text_store.h"
 
@@ -33,20 +33,20 @@ private:
     std::map<std::string, std::string> translations_;
 };
 
-TEST(localized_text_store, create) { // NOLINT
+TEST_CASE("localized_text_store create") { // NOLINT
     test_localized_store store;
 
     const auto &translation = store.translate("text");
-    ASSERT_EQ(translation, "more text");
+    REQUIRE(translation == "more text");
     const auto &translation2 = store.translate("other text");
-    ASSERT_EQ(translation2, "other text");
+    REQUIRE(translation2 == "other text");
 }
 
-TEST(localized_text_store, create2) { // NOLINT
+TEST_CASE("localized_text_store create2") {
     test_localized_store store;
 
     const auto &translation = store.translate("text");
-    ASSERT_EQ(translation, "more text");
+    REQUIRE(translation == "more text");
     const auto &translation2 = store.translate("other text");
-    ASSERT_EQ(translation2, "other text");
+    REQUIRE(translation2 == "other text");
 }

@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include <catch2/catch_all.hpp>
 #include <boost/filesystem.hpp>
 
 template <typename T>
@@ -17,7 +17,7 @@ struct Cat {
     }
 };
 
-TEST(cat, main) { // NOLINT
+TEST_CASE("cat") { // NOLINT
     Cat c;
     make_sound(c);
 
@@ -30,5 +30,5 @@ TEST(cat, main) { // NOLINT
     auto cp_as_tstring = cp.string<std::string>();
 
     // demo: pass tstring to filesystem function taking path
-    assert( fs::exists( cp_as_tstring ) );
+    REQUIRE( fs::exists( cp_as_tstring ) );
 }

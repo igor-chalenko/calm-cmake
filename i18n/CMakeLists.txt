@@ -8,17 +8,18 @@ enable_testing()
 
 calm_dependency_management(
         Boost:develop # boost-1.76.0.beta1
+        Catch2::Catch2WithMain:devel
         GTest:release-1.10.0
 )
-calm_plugins(concepts DoxypressCMake Sanitizers coverage gtest so_version)
+calm_plugins(concepts DoxypressCMake Sanitizers coverage catch2 so_version)
 
-calm_test_dependencies(GTest::gtest GTest::gtest_main Threads::Threads)
+calm_test_dependencies(Catch2::Catch2WithMain)
 
 calm_add_library(${PROJECT_NAME}
         SOURCES ${PROJECT_SOURCE_DIR}/src
         COVERAGE
         SANITIZE_ADDRESS
-        GTEST
+        CATCH2
         DOXYPRESS
         INSTALL
         DEPENDENCIES fmt::fmt Boost::spirit)

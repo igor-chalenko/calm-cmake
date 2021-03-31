@@ -1,8 +1,4 @@
-//
-// Created by crusoe on 16.10.2020.
-//
-
-#include <gtest/gtest.h>
+#include <catch2/catch_all.hpp>
 #include <type_traits>
 
 #include "syntagma/i18n/format.h"
@@ -37,9 +33,9 @@ private:
     std::map<std::string, std::string> translations_;
 };
 
-TEST(format, simple) { // NOLINT
+TEST_CASE("format") {
     test_localized_store store;
 
-    std::cout << i18n::format(store, ERROR_CODE_MSG, "code"_a = 42);
+    i18n::format(store, ERROR_CODE_MSG, "code"_a = 42);
 }
 

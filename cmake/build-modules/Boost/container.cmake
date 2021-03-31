@@ -9,7 +9,6 @@ function(_calm_init_container)
 
     if (_cpm_initialized)
         foreach (_dep ${ARGN})
-            message(STATUS "!!! including Boost/${_dep}.cmake")
             include(${_current_dir}/build-modules/Boost/${_dep}.cmake)
         endforeach ()
 
