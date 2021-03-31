@@ -21,5 +21,5 @@ calm_add_library(${PROJECT_NAME}
         GTEST
         DOXYPRESS
         INSTALL
-        DEPENDENCIES fmt::fmt Boost::thread)
+        DEPENDENCIES fmt::fmt Boost::spirit)
 

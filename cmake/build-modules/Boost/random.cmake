@@ -33,7 +33,7 @@ endfunction()
 
 if (NOT TARGET boost_random)
     set(_dependencies core static_assert mpl system assert range type_traits
-            integer config throw_exception math utility)
+            integer config throw_exception math utility dynamic_bitset)
     _calm_init_random(${_dependencies})
 endif()
 
