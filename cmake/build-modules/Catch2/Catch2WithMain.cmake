@@ -5,4 +5,6 @@ if (_cpm_initialized)
             GIT_TAG ${_git_tag})
 endif()
 
-_calm_find_package(Catch2 ${_git_tag})
+if (NOT TARGET Catch2::Catch2)
+    _calm_find_package(Catch2 ${_git_tag})
+endif()
