@@ -156,7 +156,6 @@ endfunction()
 # ``TPA_append``.
 ##############################################################################
 function(TPA_clear_scope)
-    message(STATUS "!!! TPA_clear_scope()")
     TPA_index(_index)
     foreach(_name ${_index})
         TPA_unset(${_name})
