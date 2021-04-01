@@ -14,13 +14,15 @@ function(_calm_init_container)
 
         _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS container)
 
-        calm_add_library(boost_container
-                SOURCES ${boost_container_SOURCE_DIR}/src
-                INCLUDES $<BUILD_INTERFACE:${boost_container_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
-                DEPENDENCIES ${_deps}
-                NAMESPACE Boost
-                EXPORT_NAME container
-        )
+
+        #if (DEFINED boost_container_SOURCE_DIR)
+        #    calm_add_library(boost_container
+        #            SOURCES ${boost_container_SOURCE_DIR}/src
+        #            INCLUDES $<BUILD_INTERFACE:${boost_container_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
+        #            DEPENDENCIES ${_deps}
+        #            NAMESPACE Boost
+        #            EXPORT_NAME container
+        #    )
         if (TARGET Boost::container)
             message(STATUS "The target `container` created via CPM.")
         else()
