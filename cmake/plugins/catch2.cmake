@@ -1,3 +1,6 @@
+find_package(Catch2 REQUIRED)
+include(Catch)
+
 set(calm_ROOT_TEST_TARGET "all_tests"
             CACHE STRING "Name of the root test target")
 
@@ -65,11 +68,7 @@ function(_calm_catch2_tests _for_target _sources)
                 DEPENDENCIES ${_test_dependencies}
                 ${ARGN})
         target_link_libraries(${_target} PRIVATE ${_for_target})
-        # if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.18)
-        #    gtest_discover_tests(${_target} XML_OUTPUT_DIR "test-reports")
-        # else()
-        #    gtest_discover_tests(${_target})
-        # endif()
+        catch_discover_tests(${_target})
 
         add_dependencies(${_for_target}.test ${_target})
     endforeach()
