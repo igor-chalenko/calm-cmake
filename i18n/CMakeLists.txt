@@ -20,6 +20,7 @@ calm_add_library(${PROJECT_NAME}
         COVERAGE
         SANITIZE_ADDRESS
         CATCH2
+        #GTEST
         DOXYPRESS
         INSTALL
         DEPENDENCIES fmt::fmt Boost::spirit)

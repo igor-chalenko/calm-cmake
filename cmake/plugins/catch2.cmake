@@ -1,6 +1,3 @@
-find_package(Catch2 REQUIRED)
-include(Catch)
-
 set(calm_ROOT_TEST_TARGET "all_tests"
             CACHE STRING "Name of the root test target")
 
@@ -41,7 +38,19 @@ No `test` or `tests` directories found, auto-tests not created. Use
     endif()
 endfunction()
 
+function(_calm_include_catch)
+    get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+    if (_cpm_initialized)
+        #get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+        #list(PREPEND CMAKE_MODULE_PATH "${Catch2_SOURCE_DIR}/extra")
+        include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
+    else()
+        include(Catch)
+    endif()
+endfunction()
+
 function(_calm_catch2_tests _for_target _sources)
+    #_calm_find_package(Catch2 REQUIRED)
     #include(GoogleTest)
 
     add_custom_target(${_for_target}.test
@@ -68,9 +77,13 @@ function(_calm_catch2_tests _for_target _sources)
                 DEPENDENCIES ${_test_dependencies}
                 ${ARGN})
         target_link_libraries(${_target} PRIVATE ${_for_target})
-        catch_discover_tests(${_target})
 
         add_dependencies(${_for_target}.test ${_target})
+    endforeach()
+    _calm_include_catch()
+    foreach (_file IN LISTS TESTS)
+        _calm_test_name_for_file(${_file} ${_target_prefix} _target)
+        catch_discover_tests(${_target})
     endforeach()
 endfunction()
 
