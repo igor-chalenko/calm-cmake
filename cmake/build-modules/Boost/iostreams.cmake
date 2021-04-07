@@ -13,7 +13,7 @@ function(_calm_init_iostreams)
         endforeach()
 
         _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS iostreams)
-        if (NOT ${boost_iostreams_SOURCE_DIR})
+        if (DEFINED boost_iostreams_SOURCE_DIR)
             calm_add_library(boost_iostreams
                     SOURCES "${boost_iostreams_SOURCE_DIR}/src/file_descriptor.cpp;${boost_iostreams_SOURCE_DIR}/src/mapped_file.cpp;${boost_iostreams_SOURCE_DIR}/src/gzip.cpp"
                     INCLUDES "$<BUILD_INTERFACE:${boost_iostreams_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>"
@@ -27,12 +27,12 @@ function(_calm_init_iostreams)
 
             if(ZLIB_FOUND)
                 target_link_libraries(boost_iostreams PUBLIC ZLIB::ZLIB)
-                target_sources(boost_iostreams PRIVATE ${${PROJECT_NAME}_SOURCE_DIR}/src/zlib.cpp)
+                target_sources(boost_iostreams PRIVATE ${boost_iostreams_SOURCE_DIR}/src/zlib.cpp)
             endif()
 
             if(BZip2_FOUND)
                 target_link_libraries(boost_iostreams PUBLIC BZip2::BZip2)
-                target_sources(boost_iostreams PRIVATE ${${PROJECT_NAME}_SOURCE_DIR}/src/bzip2.cpp)
+                target_sources(boost_iostreams PRIVATE ${boost_iostreams_SOURCE_DIR}/src/bzip2.cpp)
             endif()
         else()
             message(STATUS "Using installed Boost::iostreams")

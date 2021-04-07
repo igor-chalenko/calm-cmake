@@ -18,7 +18,7 @@ function(_calm_init_math)
         # Boost::math doesn't provide CMakeLists.txt as of Feb 21
         _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS math)
 
-        if (${boost_math_SOURCE_DIR})
+        if (DEFINED boost_math_SOURCE_DIR)
             calm_add_library(boost_math INTERFACE
                     INCLUDES $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
                     DEPENDENCIES ${_deps}
@@ -111,6 +111,7 @@ function(_calm_init_math)
             endif()
         else()
             message(STATUS "Boost::math found locally")
+            find_package(Boost REQUIRED COMPONENTS math_c99 math_c99f math_c99l math_tr1 math_tr1f math_tr1l)
         endif()
     else()
         find_package(Boost REQUIRED COMPONENTS math_c99 math_c99f math_c99l math_tr1 math_tr1f math_tr1l)
