@@ -13,7 +13,7 @@ function(_calm_init_iostreams)
         endforeach()
 
         _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS iostreams)
-        if (NOT ${boost_iostreams_SOURCE_DIR})
+        if (DEFINED boost_iostreams_SOURCE_DIR)
             calm_add_library(boost_iostreams
                     SOURCES "${boost_iostreams_SOURCE_DIR}/src/file_descriptor.cpp;${boost_iostreams_SOURCE_DIR}/src/mapped_file.cpp;${boost_iostreams_SOURCE_DIR}/src/gzip.cpp"
                     INCLUDES "$<BUILD_INTERFACE:${boost_iostreams_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>"

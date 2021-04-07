@@ -82,10 +82,19 @@ function(_calm_catch2_tests _for_target _sources)
         add_dependencies(${_for_target}.test ${_target})
     endforeach()
     _calm_include_catch()
-    if (NOT DEFINED _CATCH_DISCOVER_TESTS_SCRIPT)
-        set(_CATCH_DISCOVER_TESTS_SCRIPT
-                ${Catch2_SOURCE_DIR}/extras/CatchAddTests.cmake
-                )
+    get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+    if (_cpm_initialized)
+        if (NOT DEFINED _CATCH_DISCOVER_TESTS_SCRIPT)
+            set(_CATCH_DISCOVER_TESTS_SCRIPT
+                    ${Catch2_SOURCE_DIR}/extras/CatchAddTests.cmake
+                    )
+        endif()
+    else()
+        if (NOT DEFINED _CATCH_DISCOVER_TESTS_SCRIPT)
+            set(_CATCH_DISCOVER_TESTS_SCRIPT
+                    ${Catch2_DIR}/CatchAddTests.cmake
+                    )
+        endif()
     endif()
     foreach (_file IN LISTS TESTS)
         _calm_test_name_for_file(${_file} ${_target_prefix} _target)
