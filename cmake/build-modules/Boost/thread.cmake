@@ -20,7 +20,7 @@ function(_calm_init_thread)
                         "${boost_thread_SOURCE_DIR}/src/pthread/thread.cpp;${boost_thread_SOURCE_DIR}/src/pthread/once.cpp"
                         )
             endif()
-            calm_add_library(${_lib_name}
+            calm_add_library(boost_thread
                     INCLUDES $<BUILD_INTERFACE:${boost_thread_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
                     SOURCES ${_sources}
                     DEPENDENCIES ${_deps}
