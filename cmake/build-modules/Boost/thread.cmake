@@ -27,6 +27,8 @@ function(_calm_init_thread)
                     NAMESPACE Boost
                     EXPORT_NAME thread
                     )
+            find_package(Threads)
+            target_link_libraries(boost_thread PUBLIC Threads::Threads)
         else()
             find_package(Boost REQUIRED COMPONENTS thread)
         endif()
