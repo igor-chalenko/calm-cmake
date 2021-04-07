@@ -3,12 +3,33 @@ function(_calm_init_thread)
     get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
 
     if (_cpm_initialized)
-        foreach (_dep ${ARGN})
-            include(${_current_dir}/build-modules/Boost/${_dep}.cmake)
-        endforeach()
         _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS thread)
-        #find_package(Threads)
-        #target_link_libraries(boost_thread PUBLIC Threads::Threads)
+
+        if (DEFINED boost_thread_SOURCE_DIR)
+            foreach (_dep ${ARGN})
+                include(${_current_dir}/build-modules/Boost/${_dep}.cmake)
+            endforeach()
+            set(_sources
+                    "${boost_thread_SOURCE_DIR}/src/future.cpp;${boost_thread_SOURCE_DIR}/src/tss_null.cpp"
+                    )
+            if(WIN32)
+                list(APPEND _sources
+                        "${boost_thread_SOURCE_DIR}/src/win32/thread.cpp;${boost_thread_SOURCE_DIR}/src/win32/tss_dll.cpp;${boost_thread_SOURCE_DIR}/src/win32/tss_pe.cpp")
+            else()
+                LIST(APPEND _sources
+                        "${boost_thread_SOURCE_DIR}/src/pthread/thread.cpp;${boost_thread_SOURCE_DIR}/src/pthread/once.cpp"
+                        )
+            endif()
+            calm_add_library(${_lib_name}
+                    INCLUDES $<BUILD_INTERFACE:${boost_thread_SOURCE_DIR}/include>;$<INSTALL_INTERFACE:include>
+                    SOURCES ${_sources}
+                    DEPENDENCIES ${_deps}
+                    NAMESPACE Boost
+                    EXPORT_NAME thread
+                    )
+        else()
+            find_package(Boost REQUIRED COMPONENTS thread)
+        endif()
     else()
         find_package(Boost REQUIRED COMPONENTS thread)
     endif()
