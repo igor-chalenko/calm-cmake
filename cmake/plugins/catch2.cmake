@@ -36,6 +36,11 @@ No `test` or `tests` directories found, auto-tests not created. Use
 `TEST_SOURCES <directory>` to specify a non-default directory.
 ]])
     endif()
+    if (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/example")
+        _calm_catch2_tests(${_target} "example/*.cc" ${_args})
+    elseif (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/examples")
+        _calm_catch2_tests(${_target} "examples/*.cc" ${_args})
+    endif()
 endfunction()
 
 function(_calm_include_catch)
@@ -53,12 +58,13 @@ endfunction()
 function(_calm_catch2_tests _for_target _sources)
     #_calm_find_package(Catch2 REQUIRED)
     #include(GoogleTest)
-
-    add_custom_target(${_for_target}.test
-            COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-            COMMENT "Build and run all the tests.")
-    add_dependencies(${calm_ROOT_TEST_TARGET} ${_for_target}.test)
+    if (NOT TARGET ${_for_target}.test)
+        add_custom_target(${_for_target}.test
+                COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                COMMENT "Build and run all the tests.")
+        add_dependencies(${calm_ROOT_TEST_TARGET} ${_for_target}.test)
+    endif()
 
     set(_target_prefix "${_for_target}.")
     set(_test_file_pattern ${CMAKE_CURRENT_SOURCE_DIR}/${_sources})
