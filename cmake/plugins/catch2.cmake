@@ -44,7 +44,8 @@ No `test` or `tests` directories found, auto-tests not created. Use
 endfunction()
 
 function(_calm_include_catch)
-    get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+    #get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
+    _calm_find_package(Catch2::Catch2WithMain devel)
     if (Catch2_SOURCE_DIR)
         list(PREPEND CMAKE_MODULE_PATH "${Catch2_SOURCE_DIR}/extras")
     else()
