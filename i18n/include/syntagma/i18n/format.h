@@ -18,9 +18,9 @@ namespace syntagma::i18n {
     std::string format(store &translations,
                        const std::string &message,
                        Ts &&... arguments) {
-        auto const& string_template = translations.translate(message);
+        const auto & string_template = translations.translate(message);
 
-        return fmt::format(string_template, std::forward<Ts>(arguments)...);
+        return fmt::format(fmt::runtime(string_template), std::forward<Ts>(arguments)...);
     }
 
 }
