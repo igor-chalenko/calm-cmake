@@ -16,7 +16,6 @@ function(_plugin_coverage_init)
 endfunction()
 
 function(_plugin_coverage_apply _target)
-    message(STATUS "Enable Coverage for target ${_target}...")
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "(.*)CLang")
         target_link_libraries(${_target} PRIVATE gcov)
         target_compile_options(${_target} PRIVATE --coverage)
