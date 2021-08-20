@@ -46,6 +46,6 @@ if (NOT TARGET Boost::thread)
     _calm_init_thread(config predef move functional concept_check atomic io
             utility static_assert container system type_traits smart_ptr
             intrusive function core tuple winapi mpl preprocessor optional
-            date_time exception algorithm chrono bind lexical_cast
+            numeric_conversion date_time exception algorithm chrono bind lexical_cast
             throw_exception)
 endif()
