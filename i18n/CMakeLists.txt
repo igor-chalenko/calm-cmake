@@ -7,7 +7,7 @@ project(i18n VERSION ${PROJECT_VERSION} LANGUAGES C CXX)
 enable_testing()
 
 calm_dependency_management(
-        Boost:boost-1.76.0
+        Boost:boost-1.77.0
         Catch2::Catch2WithMain:devel
         GTest:release-1.10.0
 )
