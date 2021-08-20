@@ -2,6 +2,11 @@ function(_calm_init_thread)
     get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
     get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
 
+    set(_deps "")
+    foreach (_dep ${ARGN})
+        list(APPEND _deps Boost::${_dep})
+    endforeach()
+
     if (_cpm_initialized)
         _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS thread)
 
