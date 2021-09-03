@@ -13,7 +13,7 @@ calm_dependency_management(
 )
 calm_plugins(concepts DoxypressCMake Sanitizers coverage catch2 so_version)
 
-calm_test_dependencies(Catch2::Catch2WithMain)
+calm_test_dependencies(Catch2::Catch2WithMain Boost::filesystem)
 
 calm_add_library(${PROJECT_NAME}
         SOURCES ${PROJECT_SOURCE_DIR}/src
@@ -23,5 +23,6 @@ calm_add_library(${PROJECT_NAME}
         #GTEST
         DOXYPRESS
         INSTALL
-        DEPENDENCIES fmt::fmt Boost::spirit)
+        DEPENDENCIES fmt::fmt Boost::system Boost::filesystem Boost::spirit)
 
+target_compile_definitions(${PROJECT_NAME} PUBLIC BOOST_NO_CXX11_SCOPED_ENUMS=1)
