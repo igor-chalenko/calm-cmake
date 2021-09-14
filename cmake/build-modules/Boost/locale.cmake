@@ -88,7 +88,7 @@ function(_calm_init_locale)
             message(STATUS "Using Locally installed Boost::locale")
         endif()
     else()
-        find_package(Boost REQUIRED COMPONENTS locale)
+        find_package(Boost QUIET REQUIRED COMPONENTS locale)
     endif()
 endfunction()
 

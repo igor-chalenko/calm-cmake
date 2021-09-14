@@ -60,7 +60,7 @@ macro(_calm_find_package _name _version)
             endif()
         endif()
     else()
-        find_package(${_name} ${ARGN})
+        find_package(${_name} QUIET ${ARGN})
     endif()
 endmacro()
 

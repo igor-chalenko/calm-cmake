@@ -8,7 +8,7 @@ function(_calm_init_chrono)
         endforeach()
         _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS chrono)
     else()
-        find_package(Boost REQUIRED COMPONENTS chrono)
+        find_package(Boost QUIET REQUIRED COMPONENTS chrono)
     endif()
 endfunction()
 

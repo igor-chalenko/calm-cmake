@@ -16,7 +16,7 @@ function(_calm_init_serialization)
 
         _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS serialization)
     else()
-        find_package(Boost REQUIRED COMPONENTS serialization)
+        find_package(Boost QUIET REQUIRED COMPONENTS serialization)
     endif()
 endfunction()
 

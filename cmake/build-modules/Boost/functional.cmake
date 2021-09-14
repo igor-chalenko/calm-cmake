@@ -22,7 +22,7 @@ function(_calm_init_functional)
                 EXPORT_NAME functional
                 )
     else()
-        find_package(Boost REQUIRED COMPONENTS headers)
+        find_package(Boost QUIET REQUIRED COMPONENTS headers)
         calm_add_library(boost_functional INTERFACE
                 INCLUDES $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}/include>;$<INSTALL_INTERFACE:include>
                 DEPENDENCIES ${_deps}

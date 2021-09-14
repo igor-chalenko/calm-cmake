@@ -8,7 +8,7 @@ function(_calm_init_thread)
         endforeach()
         _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS thread)
     else()
-        find_package(Boost REQUIRED COMPONENTS thread)
+        find_package(Boost QUIET REQUIRED COMPONENTS thread)
     endif()
 endfunction()
 

@@ -35,7 +35,7 @@ function(_calm_init_library _lib_name _lib_alt_name)
         endif()
 
     else()
-        find_package(Boost REQUIRED COMPONENTS ${_lib_alt_name})
+        find_package(Boost QUIET REQUIRED COMPONENTS ${_lib_alt_name})
 
         # if (NOT TARGET Boost::${_lib_name})
         calm_add_library(boost_${_lib_name} INTERFACE
@@ -85,6 +85,6 @@ function(_calm_init_src_library _lib_name _lib_alt_name)
         endif()
 
     else()
-        find_package(Boost REQUIRED COMPONENTS ${_lib_alt_name})
+        find_package(Boost QUIET REQUIRED COMPONENTS ${_lib_alt_name})
     endif()
 endfunction()

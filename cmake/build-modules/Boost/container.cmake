@@ -29,7 +29,7 @@ function(_calm_init_container)
             message(WARNING "The target `container` was not created via CPM!")
         endif()
     else ()
-        find_package(Boost REQUIRED COMPONENTS container)
+        find_package(Boost QUIET REQUIRED COMPONENTS container)
     endif ()
 endfunction()
 

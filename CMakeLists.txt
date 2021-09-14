@@ -4,8 +4,6 @@ project(calm-cmake LANGUAGES CXX VERSION 1.0
 
 include(cmake/Bootstrap.cmake)
 
-message(STATUS "Project name is ${PROJECT_NAME}")
-message(STATUS "CMake project name is ${CMAKE_PROJECT_NAME}")
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(cmake/3rd-party/ycm/modules/InstallBasicPackageFiles.cmake)
 
