@@ -11,7 +11,16 @@ calm_dependency_management(
         Catch2::Catch2WithMain:devel
         GTest:release-1.10.0
 )
-calm_plugins(concepts DoxypressCMake Sanitizers coverage catch2 so_version)
+
+set(I18N_COVERAGE OFF)
+calm_plugins(concepts
+        DoxypressCMake
+        Sanitizers
+        catch2
+        so_version
+        coverage ENABLED_BY I18N_COVERAGE
+)
+
 
 calm_test_dependencies(Catch2::Catch2WithMain Boost::filesystem)
 
