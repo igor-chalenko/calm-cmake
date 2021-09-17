@@ -12,13 +12,13 @@ calm_dependency_management(
         GTest:release-1.10.0
 )
 
-set(I18N_COVERAGE OFF)
+set(I18N_COVERAGE ON)
 calm_plugins(concepts
         DoxypressCMake
         Sanitizers
-        catch2
-        so_version
+        catch2 ENABLED_BY I18N_COVERAGE
         coverage ENABLED_BY I18N_COVERAGE
+        so_version
 )
 
 
