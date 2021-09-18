@@ -1,13 +1,17 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.21)
 project(calm-cmake LANGUAGES CXX VERSION 1.0
         DESCRIPTION "CMake project template for calm development")
 
 include(cmake/Bootstrap.cmake)
 
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+option(CALM_CMAKE_BUILD_TESTS "Build tests" OFF)
+
+if(PROJECT_IS_TOP_LEVEL)
     include(cmake/3rd-party/ycm/modules/InstallBasicPackageFiles.cmake)
 
-    add_subdirectory(i18n)
+    if (CALM_CMAKE_BUILD_TESTS)
+        add_subdirectory(i18n)
+    endif()
 
     if (NOT DEFINED CMAKE_INSTALL_DATADIR)
         unset(CMAKE_INSTALL_DATADIR)
