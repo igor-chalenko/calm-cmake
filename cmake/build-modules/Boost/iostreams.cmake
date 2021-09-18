@@ -1,6 +1,5 @@
+get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 if (NOT TARGET boost_iostreams)
     include(${_current_dir}/build-modules/Boost/internal.cmake)
-    _calm_init_src_library(iostreams iostreams regex core static_assert function bind mpl
-            random detail assert range type_traits preprocessor smart_ptr
-            integer config throw_exception utility)
+    _calm_init_library(iostreams)
 endif()

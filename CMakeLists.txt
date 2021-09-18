@@ -2,11 +2,14 @@ cmake_minimum_required(VERSION 3.21)
 project(calm-cmake LANGUAGES CXX VERSION 1.0
         DESCRIPTION "CMake project template for calm development")
 
+option(CALM_CMAKE_BUILD_TESTS "Build tests" ON)
+option(CPM_DOWNLOAD_ALL "Download all dependencies using CPM" ON)
+
 include(cmake/Bootstrap.cmake)
 
-option(CALM_CMAKE_BUILD_TESTS "Build tests" OFF)
-
 if(PROJECT_IS_TOP_LEVEL)
+    include(cmake/GetCPM.cmake)
+
     include(cmake/3rd-party/ycm/modules/InstallBasicPackageFiles.cmake)
 
     if (CALM_CMAKE_BUILD_TESTS)

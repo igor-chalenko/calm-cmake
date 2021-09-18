@@ -1,5 +1,5 @@
+get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 if (NOT TARGET boost_rational)
     include(${_current_dir}/build-modules/Boost/internal.cmake)
-    _calm_init_library(rational headers config assert core integer static_assert
-            throw_exception type_traits utility)
+    _calm_init_library(rational)
 endif()

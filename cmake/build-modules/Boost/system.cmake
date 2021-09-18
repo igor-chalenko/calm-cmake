@@ -1,4 +1,5 @@
+get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 if (NOT TARGET boost_system)
     include(${_current_dir}/build-modules/Boost/internal.cmake)
-    _calm_init_library(system headers config winapi)
+    _calm_init_library(system)
 endif()
