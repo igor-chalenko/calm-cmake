@@ -14,7 +14,7 @@ calm_dependency_management(
 
 set(I18N_COVERAGE ON)
 calm_plugins(concepts
-        DoxypressCMake
+        DoxygenCMake
         Sanitizers
         catch2 ENABLED_BY I18N_COVERAGE
         coverage ENABLED_BY I18N_COVERAGE
@@ -30,7 +30,7 @@ calm_add_library(${PROJECT_NAME}
         SANITIZE_ADDRESS
         CATCH2
         #GTEST
-        DOXYPRESS
+        DOXYGEN
         INSTALL
         DEPENDENCIES fmt::fmt Boost::system Boost::filesystem Boost::spirit)
 
