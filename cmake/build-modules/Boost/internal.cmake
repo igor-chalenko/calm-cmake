@@ -5,10 +5,7 @@ function(_calm_init_library _lib_name)
         set(_alt_lib_name ${_lib_name})
     endif()
     get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
-    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS ${_lib_name})
-    if (NOT TARGET ${_lib_name})
-        _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS ${_alt_lib_name})
-    endif()
+    _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS ${_alt_lib_name})
     if (NOT TARGET boost_${_lib_name})
         calm_add_library(boost_${_lib_name} INTERFACE
                 INCLUDES $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}/include>;$<INSTALL_INTERFACE:include>
