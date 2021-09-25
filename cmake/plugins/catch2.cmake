@@ -11,8 +11,8 @@ as a basis for the `CTest` tests created by `gtest_discover_tests`.
 endfunction()
 
 function(_plugin_catch2_init)
-    add_custom_target("all_tests"
-            COMMENT "Build and run all the tests.")
+    #add_custom_target("all_tests"
+    #        COMMENT "Build and run all the tests.")
 endfunction()
 
 function(_plugin_catch2_apply _target)
@@ -58,7 +58,7 @@ function(_calm_catch2_tests _for_target _sources)
                 COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                 COMMENT "Build and run all the tests.")
-        add_dependencies("all_tests" ${_for_target}.test)
+        #add_dependencies("all_tests" ${_for_target}.test)
     endif()
 
     set(_target_prefix "${_for_target}.")

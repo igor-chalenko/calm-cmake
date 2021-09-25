@@ -20,6 +20,7 @@ calm_plugins(concepts
         #catch2 ENABLED_BY I18N_COVERAGE
         #coverage ENABLED_BY I18N_COVERAGE
         so_version
+        examples
 )
 
 
@@ -30,6 +31,7 @@ calm_add_library(${PROJECT_NAME}
         COVERAGE
         SANITIZE_ADDRESS
         CATCH2
+        EXAMPLES
         #GTEST
         DOXYGEN
         INSTALL
