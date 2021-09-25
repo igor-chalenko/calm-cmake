@@ -16,8 +16,9 @@ set(I18N_COVERAGE ON)
 calm_plugins(concepts
         DoxygenCMake
         Sanitizers
-        catch2 ENABLED_BY I18N_COVERAGE
-        coverage ENABLED_BY I18N_COVERAGE
+        catch2
+        #catch2 ENABLED_BY I18N_COVERAGE
+        #coverage ENABLED_BY I18N_COVERAGE
         so_version
 )
 

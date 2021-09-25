@@ -78,25 +78,6 @@ Searched in:
     _calm_set_plugins(${ARGN})
 endmacro()
 
-# calm_plugin(catch2 ENABLED_BY PATE_TESTS)
-macro(calm_plugin name)
-    set(_one_value_args ENABLED_BY)
-
-    cmake_parse_arguments(ARG "" "${_one_value_args}" "" ${ARGN})
-    if (ARG_ENABLED_BY)
-        if (DEFINED ${ARG_ENABLED_BY})
-            if (${${ARG_ENABLED_BY}})
-                message(STATUS "Enable plugin ${name}")
-                calm_plugins(${name})
-            else()
-                message(STATUS "The plugin `${name}` is disabled because ${ARG_ENABLED_BY} is ${${ARG_ENABLED_BY}}")
-            endif()
-        else()
-            message(WARNING "Enablement variable ${ARG_ENABLED_BY} is not defined.")
-        endif()
-    endif()
-endmacro()
-
 ###############################################################################
 #.rst:
 #
@@ -171,7 +152,7 @@ function(_calm_apply_plugins _target _target_type)
             endforeach ()
 
             if (${_required} OR _extra_args)
-                set(_saved_random_id ${_random_id})
+                #set(_saved_random_id ${_random_id})
                 _calm_call(_plugin_${_plugin}_apply ${_target} ${_extra_args})
                 set(_random_id ${_saved_random_id})
                 TPA_append("target.args.${_target}" "${_extra_args}")

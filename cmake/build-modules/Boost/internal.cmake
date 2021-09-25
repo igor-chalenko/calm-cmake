@@ -1,6 +1,22 @@
 function(_calm_init_library _lib_name)
+    if (ARGN)
+        set(_alt_lib_name ${ARGN})
+    else()
+        set(_alt_lib_name ${_lib_name})
+    endif()
     get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
     _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS ${_lib_name})
+    if (NOT TARGET ${_lib_name})
+        _calm_find_package(Boost ${_git_tag} REQUIRED COMPONENTS ${_alt_lib_name})
+    endif()
+    if (NOT TARGET boost_${_lib_name})
+        calm_add_library(boost_${_lib_name} INTERFACE
+                INCLUDES $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}/include>;$<INSTALL_INTERFACE:include>
+                DEPENDENCIES ${_deps}
+                NAMESPACE Boost
+                EXPORT_NAME ${_lib_name}
+                )
+    endif()
     get_target_property(_type boost_${_lib_name} TYPE)
     if (_type STREQUAL INTERFACE_LIBRARY)
         get_target_property(_out boost_${_lib_name} INTERFACE_LINK_LIBRARIES)

@@ -2,7 +2,7 @@ function(_plugin_DoxygenCMake_manifest)
     _calm_plugin_manifest(DoxygenCMake
             CPM_ARGUMENTS
                 GITHUB_REPOSITORY igor-chalenko/doxygen-cmake
-                GIT_TAG master
+                GIT_TAG doxygen-cmake-3
             TARGET_TYPES main
             OPTIONS DOXYGEN
             PARAMETERS DOXYGEN_ARGS

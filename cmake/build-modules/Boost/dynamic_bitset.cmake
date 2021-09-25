@@ -1,5 +1,5 @@
 get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
 if (NOT TARGET boost_dynamic_bitset)
     include(${_current_dir}/build-modules/Boost/internal.cmake)
-    _calm_init_library(dynamic_bitset)
+    _calm_init_library(dynamic_bitset headers)
 endif()

@@ -68,7 +68,12 @@ function(_calm_catch2_tests _for_target _sources)
     set(_test_file_pattern ${CMAKE_CURRENT_SOURCE_DIR}/${_sources})
     # list the test files
     file(GLOB_RECURSE TESTS LIST_DIRECTORIES false ${_test_file_pattern})
-    get_target_property(_includes ${_for_target} INTERFACE_INCLUDE_DIRECTORIES)
+    get_target_property(_type ${_for_target} TYPE)
+    if (_type STREQUAL INTERFACE_LIBRARY)
+        get_target_property(_includes ${_for_target} INTERFACE_INCLUDE_DIRECTORIES)
+    else()
+        get_target_property(_includes ${_for_target} INCLUDE_DIRECTORIES)
+    endif()
 
     # each found file is a separate test
     _calm_get_test_dependencies(_test_dependencies)
