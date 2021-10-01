@@ -236,6 +236,7 @@ function(_calm_include_recipe _dependency)
         _calm_get_managed_version(${_dep_namespace} _git_tag)
     endif()
 
+    message(STATUS "_dependency = ${_dependency}; git tag is `${_git_tag}`")
     if (NOT _git_tag)
         set(_git_tag master)
     endif ()
