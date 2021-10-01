@@ -10,6 +10,7 @@ macro(_local_include _file)
         message(FATAL_ERROR "local_include only accepts relative paths.")
     endif()
     get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
+    message(STATUS "including ${_current_dir}/${_file}")
     include(${_current_dir}/${_file})
 endmacro()
 
