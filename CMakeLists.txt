@@ -3,6 +3,8 @@ project(calm-cmake LANGUAGES CXX VERSION 1.0
         DESCRIPTION "CMake project template for calm development")
 
 include(CMakeDependentOption)
+include(cmake/GetCPM.cmake)
+include(cmake/Bootstrap.cmake)
 
 if (NOT DEFINED PROJECT_IS_TOP_LEVEL)
     get_directory_property(is_subproject PARENT_DIRECTORY)
@@ -17,9 +19,6 @@ option(CALM_CMAKE_BUILD_TESTS "Build tests" ${PROJECT_IS_TOP_LEVEL})
 option(CPM_DOWNLOAD_ALL "Download all dependencies using CPM" ${PROJECT_IS_TOP_LEVEL})
 
 if(PROJECT_IS_TOP_LEVEL)
-    include(cmake/GetCPM.cmake)
-    include(cmake/Bootstrap.cmake)
-
     include(cmake/3rd-party/ycm/modules/InstallBasicPackageFiles.cmake)
 
     if (CALM_CMAKE_BUILD_TESTS)
