@@ -57,47 +57,37 @@ function(_plugin_concepts_init)
         set(CMAKE_REQUIRED_FLAGS -fconcepts)
         check_cxx_source_compiles("${code}" HAVE_CXX_CONCEPTS_WITH_FCONCEPTS)
         if (NOT HAVE_CXX_CONCEPTS_WITH_FCONCEPTS)
-            set(CMAKE_REQUIRED_DEFINITIONS "-Dconcept=concept\\ bool")
-            if (CMAKE_REQUIRED_DEFINITIONS)
-                check_cxx_source_compiles("${code}" HAVE_CXX_CONCEPTS_TS_WITH_FCONCEPTS)
-                unset(CMAKE_REQUIRED_DEFINITIONS)
-            endif ()
+            set(_required_definitions_backup ${CMAKE_REQUIRED_DEFINITIONS})
+            list(APPEND CMAKE_REQUIRED_DEFINITIONS "-Dconcept=concept\\ bool")
+            check_cxx_source_compiles("${code}" HAVE_CXX_CONCEPTS_TS_WITH_FCONCEPTS)
+            set(CMAKE_REQUIRED_DEFINITIONS ${_required_definitions_backup})
         endif ()
+    else()
+        message(STATUS "C++ compiler supports concepts with `set(CMAKE_CXX_STANDARD 20)`.")
     endif ()
 
+    unset(_flags)
     if (HAVE_CXX_CONCEPTS_TS_WITH_FCONCEPTS OR HAVE_CXX_CONCEPTS_WITH_FCONCEPTS OR HAVE_CXX_CONCEPTS)
         add_library(CXX::Concepts INTERFACE IMPORTED)
         target_compile_definitions(CXX::Concepts INTERFACE CXX_CONCEPTS_AVAILABLE)
+        if(CMAKE_CXX_COMPILER_ID STREQUAL GNU OR CMAKE_CXX_COMPILER_ID STREQUAL CLANG)
+            list(APPEND _flags -fconcepts-diagnostics-depth=10)
+            target_compile_options(CXX::Concepts INTERFACE ${_flags})
+        endif()
     endif ()
 
     if (HAVE_CXX_CONCEPTS_TS_WITH_FCONCEPTS OR HAVE_CXX_CONCEPTS_WITH_FCONCEPTS)
-        target_compile_options(CXX::Concepts INTERFACE -fconcepts)
+        list(APPEND _flags -fconcepts)
+        target_compile_options(CXX::Concepts INTERFACE "${_flags}")
     endif ()
 
     if (HAVE_CXX_CONCEPTS_TS_WITH_FCONCEPTS)
+        list(APPEND _flags "-Dconcept=concept bool")
         target_compile_definitions(CXX::Concepts INTERFACE "concept=concept bool")
     endif ()
-endfunction()
-
-function(_plugin_concepts_apply_2 _target)
-    get_target_property(_type ${_target} TYPE)
-    if (${_type} STREQUAL INTERFACE_LIBRARY)
-        message(STATUS "[${_target}] `concepts` for an INTERFACE library")
-        set_target_properties(${_target}
-                PROPERTIES
-                INTERFACE_CXX_STANDARD 20
-                INTERFACE_CXX_STANDARD_REQUIRED YES
-                INTERFACE_CXX_EXTENSIONS NO
-                )
-    else()
-        message(STATUS "[${_target}] `concepts` for a library/executable")
-        set_target_properties(${_target}
-                PROPERTIES
-                CXX_STANDARD 20
-                CXX_STANDARD_REQUIRED YES
-                CXX_EXTENSIONS NO
-                )
-    endif ()
+    if (_flags)
+        message(STATUS "Concepts enabled with additional flags: ${_flags}")
+    endif()
 endfunction()
 
 function(_plugin_concepts_apply _target)
@@ -110,7 +100,7 @@ function(_plugin_concepts_apply _target)
             target_link_libraries(${_target} PUBLIC ${_plugin_target})
             set_target_properties(${_target}
                     PROPERTIES
-                        CXX_STANDARD 20
+                        CXX_STANDARD 23
                         CXX_STANDARD_REQUIRED YES
                         CXX_EXTENSIONS NO
                     )
