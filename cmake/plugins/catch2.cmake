@@ -100,7 +100,7 @@ function(_calm_catch2_tests _for_target _sources)
     endif()
     foreach (_file IN LISTS TESTS)
         _calm_test_name_for_file(${_file} ${_target_prefix} _target)
-        catch_discover_tests(${_target} REPORTER sonarqube)
+        catch_discover_tests(${_target} REPORTER sonarqube OUTPUT_DIR bed)
     endforeach()
 endfunction()
 
