@@ -1,8 +1,8 @@
 function(_plugin_examples_manifest)
     _calm_plugin_manifest(examples
             TARGET_TYPES main
-            PARAMETERS EXAMPLE_PATH
             OPTIONS EXAMPLES
+            PARAMETERS EXAMPLES_PATH
             DESCRIPTION [=[
 This plugin scans files in the subdirectories `example`, `examples` of the current project
 and creates an executable target for each found file under a root target `examples`. 
@@ -12,13 +12,36 @@ endfunction()
 function(_plugin_examples_init)
 endfunction()
 
+if(NOT WIN32)
+    string(ASCII 27 Esc)
+    set(ColourReset "${Esc}[m")
+    set(ColourBold  "${Esc}[1m")
+    set(Red         "${Esc}[31m")
+    set(Green       "${Esc}[32m")
+    set(Yellow      "${Esc}[33m")
+    set(Blue        "${Esc}[34m")
+    set(Magenta     "${Esc}[35m")
+    set(Cyan        "${Esc}[36m")
+    set(White       "${Esc}[37m")
+    set(BoldRed     "${Esc}[1;31m")
+    set(BoldGreen   "${Esc}[1;32m")
+    set(BoldYellow  "${Esc}[1;33m")
+    set(BoldBlue    "${Esc}[1;34m")
+    set(BoldMagenta "${Esc}[1;35m")
+    set(BoldCyan    "${Esc}[1;36m")
+    set(BoldWhite   "${Esc}[1;37m")
+endif()
+
 function(_plugin_examples_apply _target)
-    if (${ARGV1})
-        set(_test_sources "${ARGV1}")
-    endif()
+    cmake_parse_arguments(ARG "" "EXAMPLE_PATH" "")
+    set(_args ${ARGN})
     TPA_get("target.args.${_target}" _args)
-    if (_test_sources)
-        _calm_examples(${_target} "test/*.cc" ${_args})
+    if (ARG_EXAMPLES_PATH)
+        if (NOT IS_ABSOLUTE ${ARG_EXAMPLES_PATH})
+            set(ARG_EXAMPLES_PATH "${PROJECT_SOURCE_DIR}/${ARG_EXAMPLES_PATH}")
+        endif()
+        message(STATUS "Searching example sources in ${Green}${ARG_EXAMPLES_PATH}${ColourReset}")
+        _calm_examples(${_target} "${ARG_EXAMPLES_PATH}/*.cc" ${_args})
     elseif (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/example")
         _calm_examples(${_target} "example/*.cc" ${_args})
     elseif (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/examples")
@@ -33,7 +56,7 @@ endfunction()
 
 function(_calm_examples _for_target _sources)
     set(_target_prefix "${_for_target}.")
-    set(_test_file_pattern ${CMAKE_CURRENT_SOURCE_DIR}/${_sources})
+    set(_test_file_pattern ${_sources})
     # list the test files
     file(GLOB_RECURSE TESTS LIST_DIRECTORIES false ${_test_file_pattern})
     get_target_property(_type ${_for_target} TYPE)
@@ -45,6 +68,7 @@ function(_calm_examples _for_target _sources)
 
     foreach (_file IN LISTS TESTS)
         _calm_example_name_for_file(${_file} ${_target_prefix} _target)
+        message(STATUS "[examples] adding example ${_target}")
         calm_add_executable(${_target}
                 INCLUDES "${_includes}"
                 SOURCES "${_file}"
@@ -53,7 +77,7 @@ function(_calm_examples _for_target _sources)
                 ${ARGN})
         target_link_libraries(${_target} PRIVATE ${_for_target})
 
-        add_test(${_target} ${_target})
+        #add_test(${_target} ${_target})
     endforeach()
 endfunction()
 

@@ -32,6 +32,7 @@ calm_add_library(${PROJECT_NAME}
         SANITIZE_ADDRESS
         CATCH2
         EXAMPLES
+        EXAMPLES_PATH example
         #GTEST
         DOXYGEN
         INSTALL

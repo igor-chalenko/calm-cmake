@@ -113,6 +113,10 @@ function(_calm_add_target _target _type)
 
     if (ARG_UNPARSED_ARGUMENTS)
         # the target specifies some plugin parameter incorrectly
+        message(STATUS "ARGN is: ${ARGN}")
+        message(STATUS "Parameters were: ${_unique_params}")
+        message(STATUS "Options were: ${_unique_options}")
+        message(STATUS "Multi-value parameters were: ${_multi_value_args}")
         message(FATAL_ERROR "Unrecognized arguments: ${ARG_UNPARSED_ARGUMENTS}")
     endif ()
 
