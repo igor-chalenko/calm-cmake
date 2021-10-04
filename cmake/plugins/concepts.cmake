@@ -100,7 +100,7 @@ function(_plugin_concepts_apply _target)
             target_link_libraries(${_target} PUBLIC ${_plugin_target})
             set_target_properties(${_target}
                     PROPERTIES
-                        CXX_STANDARD 23
+                        CXX_STANDARD 20
                         CXX_STANDARD_REQUIRED YES
                         CXX_EXTENSIONS NO
                     )
