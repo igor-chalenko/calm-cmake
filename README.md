@@ -1,5 +1,7 @@
 # calm-cmake
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 What is it for ?
 ----------------
 The primary goal of this CMake package is to reduce the amount of bolierplate
