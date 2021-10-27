@@ -105,6 +105,7 @@ function (sanitizer_check_compiler_flags FLAG_CANDIDATES NAME PREFIX)
     set(CMAKE_REQUIRED_QUIET ${${PREFIX}_FIND_QUIETLY})
 
     get_property(ENABLED_LANGUAGES GLOBAL PROPERTY ENABLED_LANGUAGES)
+    message(STATUS "ENABLED_LANGUAGES = ${ENABLED_LANGUAGES}")
     foreach (LANG ${ENABLED_LANGUAGES})
         # Sanitizer flags are not dependend on language, but the used compiler.
         # So instead of searching flags foreach language, search flags foreach

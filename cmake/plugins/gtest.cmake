@@ -1,10 +1,7 @@
-set(calm_ROOT_TEST_TARGET "all_tests"
-            CACHE STRING "Name of the root test target")
-
 function(_plugin_gtest_manifest)
     _calm_plugin_manifest(gtest
             TARGET_TYPES main
-            PARAMETERS TEST_SOURCES
+            PARAMETERS GTEST_TEST_PATH
             OPTIONS GTEST
             DESCRIPTION [=[
 This plugin scans files in the subdirectory `test` of the current project
@@ -14,21 +11,19 @@ as a basis for the `CTest` tests created by `gtest_discover_tests`.
 endfunction()
 
 function(_plugin_gtest_init)
-    add_custom_target(${calm_ROOT_TEST_TARGET}
-            COMMENT "Build and run all the tests.")
 endfunction()
 
 function(_plugin_gtest_apply _target)
-    if (${ARGV1})
-        set(_test_sources "${ARGV1}")
-    endif()
-    TPA_get("target.args.${_target}" _args)
-    if (_test_sources)
-        _calm_tests(${_target} "test/*.cc" ${_args})
+    cmake_parse_arguments(ARG "" "GTEST_TEST_PATH" "" ${ARGN})
+    if (ARG_GTEST_TEST_PATH)
+        if (NOT IS_ABSOLUTE ${ARG_GTEST_TEST_PATH})
+            set(ARG_GTEST_TEST_PATH "${PROJECT_SOURCE_DIR}/${ARG_GTEST_TEST_PATH}")
+        endif()
+        _calm_gtest_tests(${_target} "${ARG_GTEST_TEST_PATH}" "*" ${ARGN})
     elseif (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/test")
-        _calm_tests(${_target} "test/*.cc" ${_args})
+        _calm_gtest_tests(${_target} "${PROJECT_SOURCE_DIR}/test" "*" ${ARGN})
     elseif (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/tests")
-        _calm_tests(${_target} "tests/*.cc" ${_args})
+        _calm_gtest_tests(${_target} "${PROJECT_SOURCE_DIR}/tests" "*" ${ARGN})
     else()
         message(WARNING [[
 No `test` or `tests` directories found, auto-tests not created. Use
@@ -37,7 +32,7 @@ No `test` or `tests` directories found, auto-tests not created. Use
     endif()
 endfunction()
 
-function(_calm_tests _for_target _sources)
+function(_calm_gtest_tests _for_target _sources)
     include(GoogleTest)
 
     add_custom_target(${_for_target}.test

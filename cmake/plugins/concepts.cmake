@@ -1,6 +1,6 @@
 function(_plugin_concepts_manifest)
     _calm_plugin_manifest(concepts
-            REQUIRED
+            PROJECT_WIDE
             TARGET_TYPES main test
             DESCRIPTION [=[
 This plugin performs the following actions on each configured target:
@@ -63,7 +63,7 @@ function(_plugin_concepts_init)
             set(CMAKE_REQUIRED_DEFINITIONS ${_required_definitions_backup})
         endif ()
     else()
-        message(STATUS "C++ compiler supports concepts with `set(CMAKE_CXX_STANDARD 20)`.")
+        log_info(calm.cmake "C++ compiler supports concepts with `set(CMAKE_CXX_STANDARD 20)`.")
     endif ()
 
     unset(_flags)
@@ -86,7 +86,7 @@ function(_plugin_concepts_init)
         target_compile_definitions(CXX::Concepts INTERFACE "concept=concept bool")
     endif ()
     if (_flags)
-        message(STATUS "Concepts enabled with additional flags: ${_flags}")
+        log_info(calm.cmake "Concepts enabled with additional flags: ${_flags}")
     endif()
 endfunction()
 
@@ -106,7 +106,7 @@ function(_plugin_concepts_apply _target)
                     )
         endif ()
     else()
-        message(STATUS "The target ${_plugin_target} doesn't exist.")
+        log_error(calm.cmake "The target ${_plugin_target} doesn't exist.")
         message(FATAL_ERROR [[
 Plugin `concepts` did not initialize, or the target name changed in the implementation.]])
     endif ()

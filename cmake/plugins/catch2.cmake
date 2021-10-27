@@ -1,36 +1,34 @@
 function(_plugin_catch2_manifest)
     _calm_plugin_manifest(catch2
             TARGET_TYPES main
-            PARAMETERS CATCH2_TESTS
+            PARAMETERS CATCH2_TEST_PATH
             OPTIONS CATCH2
             DESCRIPTION [=[
-This plugin scans files in the subdirectory `test` of the current project
-and creates an executable target for each found file. The target is then used
-as a basis for the `CTest` tests created by `gtest_discover_tests`.
+This plugin globs files in the subdirectories `${CATCH2_TEST_PATH}`, `test`,
+and `tests` (whichever is found first) of the current project and creates
+an executable target for each found file. The target is then used as a basis
+for the `CTest` tests created by `catch_discover_tests`.
 ]=])
 endfunction()
 
 function(_plugin_catch2_init)
-    #add_custom_target("all_tests"
-    #        COMMENT "Build and run all the tests.")
 endfunction()
 
 function(_plugin_catch2_apply _target)
-    cmake_parse_arguments(ARG "" "TEST_SOURCES" "")
-    set(_args ${ARGN})
-    if (ARG_TEST_SOURCES)
-        if (NOT IS_ABSOLUTE ${ARG_TEST_SOURCES})
-            set(ARG_TEST_SOURCES "${PROJECT_SOURCE_DIR}/${ARG_TEST_SOURCES}")
+    cmake_parse_arguments(ARG "" "CATCH2_TEST_PATH" "" ${ARGN})
+    if (ARG_CATCH2_TEST_PATH)
+        if (NOT IS_ABSOLUTE ${ARG_CATCH2_TEST_PATH})
+            set(ARG_CATCH2_TEST_PATH "${PROJECT_SOURCE_DIR}/${ARG_CATCH2_TEST_PATH}")
         endif()
-        _calm_catch2_tests(${_target} "${ARG_TEST_SOURCES}/*.cc" ${_args})
+        _calm_catch2_tests(${_target} "${ARG_CATCH2_TEST_PATH}" "*" ${ARGN})
     elseif (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/test")
-        _calm_catch2_tests(${_target} "${PROJECT_SOURCE_DIR}/test/*.cc" ${_args})
+        _calm_catch2_tests(${_target} "${PROJECT_SOURCE_DIR}/test" "*" ${ARGN})
     elseif (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/tests")
-        _calm_catch2_tests(${_target} "${PROJECT_SOURCE_DIR}/tests/*.cc" ${_args})
+        _calm_catch2_tests(${_target} "${PROJECT_SOURCE_DIR}/tests" "*" ${ARGN})
     else()
         message(WARNING [[
 No `test` or `tests` directories found, auto-tests not created. Use
-`TEST_SOURCES <directory>` to specify a non-default directory.
+`CATCH2_TEST_PATH <directory>` to specify a non-default directory.
 ]])
     endif()
 endfunction()
@@ -46,7 +44,7 @@ function(_calm_include_catch)
     include(ParseAndAddCatchTests)
 endfunction()
 
-function(_calm_catch2_tests _for_target _sources)
+function(_calm_catch2_tests _for_target _sources _mask)
     #_calm_find_package(Catch2 REQUIRED)
     #include(GoogleTest)
     if (NOT TARGET ${_for_target}.test)
@@ -60,7 +58,7 @@ function(_calm_catch2_tests _for_target _sources)
     set(_target_prefix "${_for_target}.")
     set(_test_file_pattern ${_sources})
     # list the test files
-    file(GLOB_RECURSE TESTS LIST_DIRECTORIES false ${_test_file_pattern})
+    file(GLOB_RECURSE TESTS LIST_DIRECTORIES false ${_test_file_pattern}/${_mask})
     get_target_property(_type ${_for_target} TYPE)
     if (_type STREQUAL INTERFACE_LIBRARY)
         get_target_property(_includes ${_for_target} INTERFACE_INCLUDE_DIRECTORIES)
@@ -73,6 +71,7 @@ function(_calm_catch2_tests _for_target _sources)
 
     foreach (_file IN LISTS TESTS)
         _calm_test_name_for_file(${_file} ${_target_prefix} _target)
+        log_debug(calm.plugins.catch2 "Add test ${_target}")
         calm_add_executable(${_target}
                 INCLUDES "${_includes}"
                 SOURCES "${_file}"
@@ -100,7 +99,7 @@ function(_calm_catch2_tests _for_target _sources)
     endif()
     foreach (_file IN LISTS TESTS)
         _calm_test_name_for_file(${_file} ${_target_prefix} _target)
-        catch_discover_tests(${_target} REPORTER sonarqube OUTPUT_DIR bed)
+        catch_discover_tests(${_target}) # REPORTER sonarqube OUTPUT_DIR bed)
     endforeach()
 endfunction()
 

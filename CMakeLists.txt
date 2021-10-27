@@ -4,7 +4,6 @@ project(calm-cmake LANGUAGES CXX VERSION 1.0
 
 include(CMakeDependentOption)
 include(cmake/GetCPM.cmake)
-include(cmake/Bootstrap.cmake)
 
 if (NOT DEFINED PROJECT_IS_TOP_LEVEL)
     get_directory_property(is_subproject PARENT_DIRECTORY)
@@ -17,13 +16,25 @@ endif()
 
 option(CALM_CMAKE_BUILD_TESTS "Build tests" ${PROJECT_IS_TOP_LEVEL})
 option(CPM_DOWNLOAD_ALL "Download all dependencies using CPM" ${PROJECT_IS_TOP_LEVEL})
+enable_testing()
 
 if(PROJECT_IS_TOP_LEVEL)
+    CPMAddPackage("gh:igor-chalenko/cmake-utilities#master")
+    list(APPEND CMAKE_MODULE_PATH "${cmake-utilities_SOURCE_DIR}/cmake")
+
+    include(Logging)
+    include(GlobalMap)
+    include(Testing)
+    include(DynamicFunctions)
+    include(Dependency)
+
+    include(cmake/Bootstrap.cmake)
     include(cmake/3rd-party/ycm/modules/InstallBasicPackageFiles.cmake)
 
-    if (CALM_CMAKE_BUILD_TESTS)
-        add_subdirectory(i18n)
-    endif()
+    #add_subdirectory(test)
+    add_subdirectory(i18n)
+    #if (CALM_CMAKE_BUILD_TESTS)
+    #endif()
 
     if (NOT DEFINED CMAKE_INSTALL_DATADIR)
         unset(CMAKE_INSTALL_DATADIR)
@@ -35,6 +46,7 @@ if(PROJECT_IS_TOP_LEVEL)
             COMPATIBILITY AnyNewerVersion
             ARCH_INDEPENDENT
             NO_EXPORT
+            LOWERCASE_FILENAMES
             EXTRA_PATH_VARS_SUFFIX MODULE_DIR
             NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 

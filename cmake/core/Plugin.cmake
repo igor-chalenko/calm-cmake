@@ -1,3 +1,4 @@
+
 ##############################################################################
 #.rst:
 #
@@ -19,7 +20,6 @@
 #
 ##############################################################################
 macro(calm_plugins)
-    _package_directory(_current_dir)
     foreach (_plugin ${ARGN})
         set(_suffix "plugins/${_plugin}.cmake")
         set(_include_file ${PROJECT_SOURCE_DIR}/cmake/${_suffix})
@@ -40,10 +40,23 @@ Searched in:
             message(SEND_ERROR "Plugin `${_plugin}` not found.\n${_locations}")
         endif ()
         include(${_include_file})
-        _calm_call(_plugin_${_plugin}_init)
+        dynamic_call(_plugin_${_plugin}_init)
+        log_info(calm.cmake "The plugin `${_plugin}` initialized")
     endforeach ()
     _calm_set_plugins(${ARGN})
 endmacro()
+
+function(calm_optional_plugin _name)
+    set(_params ENABLED_BY ENABLED_WHEN)
+    cmake_parse_arguments(ARG "" "${_params}" "" ${ARGN})
+    global_append(calm.cmake "optional.plugins" "${_name}")
+    if (ARG_ENABLED_BY)
+        global_set(calm.cmake plugin.${_name}.enabled.by "${ARG_ENABLED_BY}")
+    endif()
+    if (ARG_ENABLED_WHEN)
+        global_set(calm.cmake plugin.${_name}.enabled.when "${ARG_ENABLED_WHEN}")
+    endif()
+endfunction()
 
 ###############################################################################
 #.rst:
@@ -64,23 +77,22 @@ endmacro()
 #
 ###############################################################################
 function(_calm_plugin_manifest _plugin)
-    set(_options REQUIRED)
+    set(_options PROJECT_WIDE)
     set(_one_value_args DESCRIPTION)
     set(_multi_value_args TARGET_TYPES PARAMETERS OPTIONS CPM_ARGUMENTS)
 
     unset(ARG_TARGET_TYPES)
-    unset(ARG_REQUIRED)
     unset(ARG_PARAMETERS)
     unset(ARG_OPTIONS)
     unset(ARG_CPM_ARGUMENTS)
     cmake_parse_arguments(ARG
             "${_options}" "${_one_value_args}" "${_multi_value_args}" ${ARGN})
 
-    _calm_set_plugin_required(${_plugin} ${ARG_REQUIRED})
     _calm_set_plugin_target_types(${_plugin} ${ARG_TARGET_TYPES})
     _calm_set_plugin_description(${_plugin} "${ARG_DESCRIPTION}")
     _calm_set_plugin_parameters(${_plugin} "${ARG_PARAMETERS}")
     _calm_set_plugin_options(${_plugin} "${ARG_OPTIONS}")
+    _calm_set_plugin_project_wide(${_plugin} "${ARG_PROJECT_WIDE}")
     if (ARG_CPM_ARGUMENTS)
         _calm_set_cpm_arguments(${_plugin} "${ARG_CPM_ARGUMENTS}")
     endif ()
@@ -94,19 +106,18 @@ function(_calm_plugin_manifest _plugin)
         list(APPEND _all_parameters ${_parameters})
     endif ()
 
-    TPA_append("plugins.parameters" "${ARG_PARAMETERS}")
-    TPA_append("plugins.options" "${ARG_OPTIONS}")
+    global_append(calm.cmake "plugins.parameters" "${ARG_PARAMETERS}")
+    global_append(calm.cmake "plugins.options" "${ARG_OPTIONS}")
 endfunction()
 
 function(_calm_apply_plugins _target _target_type)
-    TPA_unset("target.args.${_target}")
+    unset(target.args.${_target})
     _calm_get_plugins(_plugins)
     foreach (_plugin ${_plugins})
         _calm_get_plugin_parameters(${_plugin} _parameters)
         _calm_get_plugin_options(${_plugin} _options)
-        _calm_get_target_types(${_plugin} _plugin_phase)
-        _calm_is_plugin_required(${_plugin} _required)
-        if (${_target_type} IN_LIST _plugin_phase)
+        _calm_get_target_types(${_plugin} _plugin_target_types)
+        if (${_target_type} IN_LIST _plugin_target_types)
             set(_extra_args "")
             foreach (_parameter ${_parameters})
                 if (ARG_${_parameter})
@@ -121,127 +132,91 @@ function(_calm_apply_plugins _target _target_type)
                 endif ()
             endforeach ()
 
-            if (${_required} OR _extra_args)
+            if (_extra_args)
+                set(${_plugin}_given_args true)
                 foreach (_arg ${_extra_args})
-                    TPA_append("target.args.${_target}" "${_arg}")
+                    list(APPEND target.args.${_target} "${_arg}")
                 endforeach()
+            else()
+                set(${_plugin}_given_args false)
             endif ()
         endif ()
     endforeach ()
-    TPA_get("target.args.${_target}" _extra_args)
     foreach (_plugin ${_plugins})
-        _calm_get_plugin_parameters(${_plugin} _parameters)
-        _calm_get_plugin_options(${_plugin} _options)
-        _calm_get_target_types(${_plugin} _plugin_phase)
-        _calm_is_plugin_required(${_plugin} _required)
-        if (${_target_type} IN_LIST _plugin_phase)
-            set(_new_extra_args "")
-            foreach (_parameter ${_parameters})
-                if (ARG_${_parameter})
-                    list(APPEND _new_extra_args ${ARG_${_parameter}})
-                endif ()
-            endforeach ()
-            foreach (_option ${_options})
-                if (ARG_${_option})
-                    list(APPEND _new_extra_args ${_option})
-                endif ()
-            endforeach ()
-
-            if (${_required} OR _new_extra_args)
-                #message(STATUS "[${_plugin}] invoke with _extra_args = ${_extra_args}")
-                _calm_call(_plugin_${_plugin}_apply ${_target} ${_extra_args})
+        _calm_get_target_types(${_plugin} _plugin_target_types)
+        if (${_target_type} IN_LIST _plugin_target_types)
+            _calm_get_plugin_project_wide(${_plugin} _project_wide)
+            if (${_plugin}_given_args OR _project_wide)
+                log_debug(calm.cmake "apply_plugin_${_plugin}(${_target} ${target.args.${_target}})")
+                dynamic_call(_plugin_${_plugin}_apply ${_target} ${target.args.${_target}})
             endif()
         endif()
     endforeach()
 endfunction()
 
-##############################################################################
-#.rst:
-#
-# .. cmake:command:: _calm_call
-#
-# .. code-block:: cmake
-#
-#    _calm_call(_id _arg1)
-#
-# Calls a function or a macro given its name ``_id``. Writes actual call code
-# into a temporary file, which is then included. ``ARGN`` is also passed.
-##############################################################################
-function(_calm_call _id)
-    if (NOT COMMAND ${_id})
-        message(FATAL_ERROR "Unsupported function/macro \"${_id}\"")
-    else ()
-        set(_helper "${CMAKE_CURRENT_BINARY_DIR}/helpers/macro_helper_${_id}.cmake")
-        if (NOT EXISTS ${_helper})
-            set(_args [[(${ARGN})]])
-            file(WRITE "${_helper}" "${_id}${_args}\n")
-        endif ()
-        include("${_helper}")
-    endif ()
-endfunction()
-
 function(_calm_get_plugins _out_var)
-    TPA_get("plugins" _plugins)
+    global_get(calm.cmake "plugins" _plugins)
     set(${_out_var} "${_plugins}" PARENT_SCOPE)
 endfunction()
 
 function(_calm_set_plugins)
-    TPA_set("plugins" "${ARGN}")
+    global_set(calm.cmake "plugins" "${ARGN}")
 endfunction()
 
 function(_calm_get_plugin_options _plugin _out_var)
-    TPA_get(plugins.options.${_plugin} _options)
+    global_get(calm.cmake plugins.options.${_plugin} _options)
     set(${_out_var} "${_options}" PARENT_SCOPE)
 endfunction()
 
 function(_calm_set_plugin_options _plugin _options)
-    TPA_set(plugins.options.${_plugin} "${_options}")
+    global_set(calm.cmake plugins.options.${_plugin} "${_options}")
 endfunction()
 
 function(_calm_get_plugin_parameters _plugin _out_var)
-    TPA_get(plugins.parameters.${_plugin} _parameters)
+    global_get(calm.cmake plugins.parameters.${_plugin} _parameters)
     set(${_out_var} "${_parameters}" PARENT_SCOPE)
 endfunction()
 
 function(_calm_set_plugin_parameters _plugin)
-    TPA_set(plugins.parameters.${_plugin} "${ARGN}")
+    global_set(calm.cmake plugins.parameters.${_plugin} "${ARGN}")
 endfunction()
 
 function(_calm_set_plugin_target_types _plugin)
-    TPA_set("plugin.target.types.${_plugin}" "${ARGN}")
+    global_set(calm.cmake "plugin.target.types.${_plugin}" "${ARGN}")
+endfunction()
+
+function(_calm_set_plugin_project_wide _plugin)
+    global_set(calm.cmake "plugin.project_wide.${_plugin}" "${ARGN}")
 endfunction()
 
 function(_calm_get_target_types _plugin _out_var)
-    TPA_get("plugin.target.types.${_plugin}" _phase)
+    global_get(calm.cmake "plugin.target.types.${_plugin}" _phase)
     set(${_out_var} "${_phase}" PARENT_SCOPE)
 endfunction()
 
 function(_calm_set_plugin_description _plugin _description)
-    TPA_set("plugin.description.${_plugin}" "${_description}")
+    global_set(calm.cmake "plugin.description.${_plugin}" "${_description}")
 endfunction()
 
 function(_calm_get_plugin_description _plugin _out_var)
-    TPA_get("plugin.description.${_plugin}" _description)
+    global_get(calm.cmake "plugin.description.${_plugin}" _description)
     set(${_out_var} "${_description}" PARENT_SCOPE)
 endfunction()
 
-function(_calm_set_plugin_required _plugin _required)
-    TPA_set("plugin.${_plugin}.required" ${_required})
+function(_calm_get_plugin_project_wide _plugin _out_var)
+    global_get(calm.cmake "plugin.project_wide.${_plugin}" _project_wide)
+    set(${_out_var} "${_project_wide}" PARENT_SCOPE)
 endfunction()
 
-function(_calm_is_plugin_required _plugin _out_var)
-    TPA_get("plugin.${_plugin}.required" _required)
-    set(${_out_var} ${_required} PARENT_SCOPE)
-endfunction()
+get_filename_component(_current_dir ${CMAKE_CURRENT_LIST_FILE} PATH)
 
-_package_directory(_dir)
-foreach (_plugin_dir IN_LIST
-        "${_dir}" "${PROJECT_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}")
-    file(GLOB_RECURSE _files ${_plugin_dir}/plugins/*.cmake)
+foreach (_plugin_dir "${_current_dir}" "${PROJECT_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}")
+    file(GLOB_RECURSE _files ${_plugin_dir}/../plugins/*.cmake)
     foreach (_file ${_files})
         include(${_file})
         get_filename_component(_name ${_file} NAME_WLE)
-        _calm_call(_plugin_${_name}_manifest)
+        dynamic_call(_plugin_${_name}_manifest)
+        _calm_get_plugin_project_wide(${_name} _project_wide)
         if (CALM_LIST_PLUGINS)
             _calm_get_plugin_description(${_name} _description)
             message("---------------------------")
@@ -251,3 +226,4 @@ foreach (_plugin_dir IN_LIST
         endif ()
     endforeach ()
 endforeach ()
+

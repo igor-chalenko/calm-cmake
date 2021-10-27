@@ -56,6 +56,8 @@ function(_plugin_install_apply _target)
     endif ()
 
     if(${_type} MATCHES "(.*)_LIBRARY")
+        set_target_properties(fmt PROPERTIES EXPORT_NAME fmt)
+        install(TARGETS fmt EXPORT MyInstall)
         _install_library(${_target} ${_namespace})
     endif()
 
@@ -135,6 +137,7 @@ function(_install_library _target _namespace)
         set(_include_dir "${CMAKE_INSTALL_INCLUDEDIR}/${_lower_namespace}/${_export_name}")
         set(_destination ${CMAKE_INSTALL_DATADIR}/${_lower_namespace}/${_export_name})
     endif()
+    _amend_link_libraries(${_target} "${_dependencies}")
     install(TARGETS ${_target}
             EXPORT "${_target_export_name}"
             PUBLIC_HEADER DESTINATION ${_include_dir}

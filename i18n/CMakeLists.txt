@@ -6,23 +6,24 @@
 project(i18n VERSION ${PROJECT_VERSION} LANGUAGES C CXX)
 enable_testing()
 
-calm_dependency_management(
-        Boost:boost-1.77.0
-        Catch2::Catch2WithMain:devel
-        GTest:release-1.10.0
-)
-
 set(I18N_COVERAGE ON)
-calm_plugins(concepts
-        DoxygenCMake
-        Sanitizers
-        catch2
-        #catch2 ENABLED_BY I18N_COVERAGE
-        #coverage ENABLED_BY I18N_COVERAGE
-        so_version
-        examples
+calm_project_dependencies(
+        MAIN
+            Boost:boost-1.77.0
+        TEST
+            Catch2::Catch2WithMain:devel
+            GTest:release-1.10.0
 )
 
+calm_plugins(catch2
+            concepts
+            so_version
+            install
+            examples)
+
+calm_optional_plugin(doxygen-cmake)
+calm_optional_plugin(sanitizers ENABLED_WHEN "${CMAKE_CXX_COMPILER} STREQUAL GNU")
+calm_optional_plugin(coverage ENABLED_BY I18N_COVERAGE)
 
 calm_test_dependencies(Catch2::Catch2WithMain Boost::filesystem)
 
@@ -32,10 +33,10 @@ calm_add_library(${PROJECT_NAME}
         SANITIZE_ADDRESS
         CATCH2
         EXAMPLES
-        EXAMPLES_PATH example
+        EXAMPLE_PATH example
         #GTEST
         DOXYGEN
-        INSTALL
+        #INSTALL
         DEPENDENCIES fmt::fmt Boost::system Boost::filesystem Boost::spirit)
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC BOOST_NO_CXX11_SCOPED_ENUMS=1)
