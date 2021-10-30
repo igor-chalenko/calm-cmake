@@ -1,7 +1,7 @@
 function(_plugin_catch2_manifest)
     _calm_plugin_manifest(catch2
             TARGET_TYPES main
-            PARAMETERS CATCH2_TEST_PATH
+            PARAMETERS CATCH2_TEST_PATH REPORTER OUTPUT_DIR
             OPTIONS CATCH2
             DESCRIPTION [=[
 This plugin globs files in the subdirectories `${CATCH2_TEST_PATH}`, `test`,
@@ -45,8 +45,8 @@ function(_calm_include_catch)
 endfunction()
 
 function(_calm_catch2_tests _for_target _sources _mask)
-    #_calm_find_package(Catch2 REQUIRED)
-    #include(GoogleTest)
+    cmake_parse_arguments(ARG "" "REPORTER;OUTPUT_DIR" "" ${ARGN})
+
     if (NOT TARGET ${_for_target}.test)
         add_custom_target(${_for_target}.test
                 COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
@@ -99,12 +99,19 @@ function(_calm_catch2_tests _for_target _sources _mask)
     endif()
     foreach (_file IN LISTS TESTS)
         _calm_test_name_for_file(${_file} ${_target_prefix} _target)
-        catch_discover_tests(${_target}) # REPORTER sonarqube OUTPUT_DIR bed)
+        unset(_cmd_line)
+        if (ARG_REPORTER)
+            list(APPEND _cmd_line REPORTER ${ARG_REPORTER})
+        endif()
+        if (ARG_OUTPUT_DIR)
+            list(APPEND _cmd_line OUTPUT_DIR ${ARG_OUTPUT_DIR})
+        endif()
+        catch_discover_tests(${_target} ${_cmd_line})
     endforeach()
 endfunction()
 
 # ===========================================================================
-# as_target_name(<output variable> <source file> [ext])
+# _calm_test_name_for_file(<output variable> <source file> [ext])
 # ============================================================================
 # Return the target name associated to a source file. If the path of the
 # source file relative from the source directory is `path/to/source/file.ext`,

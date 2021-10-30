@@ -21,41 +21,46 @@
 ##############################################################################
 macro(calm_plugins)
     foreach (_plugin ${ARGN})
-        set(_suffix "plugins/${_plugin}.cmake")
-        set(_include_file ${PROJECT_SOURCE_DIR}/cmake/${_suffix})
-        if (NOT EXISTS ${_include_file})
-            set(_include_file ${CMAKE_SOURCE_DIR}/cmake/${_suffix})
-        endif ()
-        if (NOT EXISTS ${_include_file})
-            set(_include_file ${_current_dir}/${_suffix})
-        endif ()
-        if (NOT EXISTS ${_include_file})
-            set(_locations [[
+        _calm_plugin(${_plugin})
+    endforeach ()
+    _calm_set_plugins(${ARGN})
+endmacro()
+
+macro(_calm_plugin _plugin)
+    set(_suffix "plugins/${_plugin}.cmake")
+    set(_include_file ${PROJECT_SOURCE_DIR}/cmake/${_suffix})
+    if (NOT EXISTS ${_include_file})
+        set(_include_file ${CMAKE_SOURCE_DIR}/cmake/${_suffix})
+    endif ()
+    if (NOT EXISTS ${_include_file})
+        set(_include_file ${_current_dir}/${_suffix})
+    endif ()
+    if (NOT EXISTS ${_include_file})
+        set(_locations [[
 Searched in:
 1) ${PROJECT_SOURCE_DIR}/cmake/plugins
 2) ${CMAKE_SOURCE_DIR}/cmake/plugins
 3) ${_current_cmake_dir}/plugins
 ]]
-                    )
-            message(SEND_ERROR "Plugin `${_plugin}` not found.\n${_locations}")
-        endif ()
-        include(${_include_file})
-        dynamic_call(_plugin_${_plugin}_init)
-        log_info(calm.cmake "The plugin `${_plugin}` initialized")
-    endforeach ()
-    _calm_set_plugins(${ARGN})
+                )
+        message(SEND_ERROR "Plugin `${_plugin}` not found.\n${_locations}")
+    endif ()
+    include(${_include_file})
+    dynamic_call(_plugin_${_plugin}_init)
+    message(STATUS "The plugin `${_plugin}` initialized")
 endmacro()
 
 function(calm_optional_plugin _name)
     set(_params ENABLED_BY ENABLED_WHEN)
     cmake_parse_arguments(ARG "" "${_params}" "" ${ARGN})
-    global_append(calm.cmake "optional.plugins" "${_name}")
+    global_append(calm.cmake "plugins" ${_name})
     if (ARG_ENABLED_BY)
         global_set(calm.cmake plugin.${_name}.enabled.by "${ARG_ENABLED_BY}")
     endif()
     if (ARG_ENABLED_WHEN)
         global_set(calm.cmake plugin.${_name}.enabled.when "${ARG_ENABLED_WHEN}")
     endif()
+    _calm_plugin(${_name})
 endfunction()
 
 ###############################################################################

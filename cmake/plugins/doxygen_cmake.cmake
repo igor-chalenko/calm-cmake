@@ -1,10 +1,11 @@
-macro(_doxygen_find_package _name)
-    _calm_find_package(${_name}
-            QUIET
+macro(_doxygen_find_package)
+    _calm_find_package(doxygen_cmake
             CPM_ARGUMENTS
                 GITHUB_REPOSITORY igor-chalenko/doxygen-cmake
                 GIT_TAG master
             QUIET)
+    message(STATUS "!!! doxygen_cmake_SOURCE_DIR = ${doxygen_cmake_SOURCE_DIR}")
+    include("${doxygen_cmake_SOURCE_DIR}/cmake/add-doxygen-targets.cmake")
 endmacro()
 
 function(_plugin_doxygen_cmake_manifest)
@@ -34,8 +35,6 @@ function(_plugin_doxygen_cmake_init)
 endfunction()
 
 function(_plugin_doxygen_cmake_apply _target)
-    find_package(doxygen_cmake REQUIRED)
-    if (doxygen_cmake_FOUND)
-        doxygen_add_docs_new(INPUT_TARGET ${_target} ${ARGN})
-    endif()
+    _doxygen_find_package(doxygen_cmake REQUIRED)
+    add_doxygen_targets(INPUT_TARGET ${_target} ${ARGN})
 endfunction()

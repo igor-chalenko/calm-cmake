@@ -15,15 +15,20 @@ calm_project_dependencies(
             GTest:release-1.10.0
 )
 
+log_level(calm DEBUG)
+log_level(doxygen TRACE)
+
 calm_plugins(catch2
+            coverage
             concepts
             so_version
             install
+            sanitizers
             examples)
 
-calm_optional_plugin(doxygen-cmake)
-calm_optional_plugin(sanitizers ENABLED_WHEN "${CMAKE_CXX_COMPILER} STREQUAL GNU")
-calm_optional_plugin(coverage ENABLED_BY I18N_COVERAGE)
+calm_optional_plugin(doxygen_cmake)
+#calm_optional_plugin(sanitizers ENABLED_WHEN "${CMAKE_CXX_COMPILER} STREQUAL GNU")
+#calm_optional_plugin(coverage ENABLED_BY I18N_COVERAGE)
 
 calm_test_dependencies(Catch2::Catch2WithMain Boost::filesystem)
 
@@ -35,7 +40,7 @@ calm_add_library(${PROJECT_NAME}
         EXAMPLES
         EXAMPLE_PATH example
         #GTEST
-        DOXYGEN
+        DOXYGEN_ARGS PROJECT_NAME ${PROJECT_NAME}
         #INSTALL
         DEPENDENCIES fmt::fmt Boost::system Boost::filesystem Boost::spirit)
 
