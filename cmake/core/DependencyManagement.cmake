@@ -9,27 +9,47 @@
 #
 # .. code-block:: cmake
 #
-#    calm_dependency_management(<dependency>:<version> ...)
+#    calm_dependency_management(
+#                               [MAIN <dependency>:<version>... ]
+#                               [TEST <dependency>:<version>... ]
+#    )
 #
 # .. note::
 #    Dependency names should be consistent between the calls to this function
 #    and target creation functions :cmake:command:`calm_add_library` and
 #    :cmake:command:`calm_add_executable`.
 ###############################################################################
-function(calm_dependency_management)
-    foreach(_dependency ${ARGN})
-        string(FIND ${_dependency} ":" _colon_ind REVERSE)
-        if (_colon_ind GREATER -1)
-            string(SUBSTRING ${_dependency} 0 ${_colon_ind} _package)
-            math(EXPR _colon_ind "${_colon_ind} + 1")
-            string(SUBSTRING ${_dependency} ${_colon_ind} -1 _version)
-            _calm_set_managed_version(${_package} ${_version})
-        else()
-            message(FATAL_ERROR
-"Change the specification string `${_dependency}` to follow the format
-    <dependency>:<version>")
-        endif()
-    endforeach()
+function(calm_project_dependencies)
+    set(_multi_value_args MAIN TEST)
+    cmake_parse_arguments(ARG "" "" "${_multi_value_args}" ${ARGN})
+    if (ARG_MAIN)
+        foreach(_dependency IN LISTS ARG_MAIN)
+            _calm_project_dependency(${_dependency})
+        endforeach()
+    endif()
+    # MAIN == TEST for now
+    if (ARG_TEST)
+        foreach(_dependency IN LISTS ARG_TEST)
+            _calm_project_dependency(${_dependency})
+        endforeach()
+    endif()
+endfunction()
+
+function(_calm_project_dependency _dependency)
+    if (_dependency MATCHES "([-_A-Za-z0-9\\.]+)::([-_A-Za-z_0-9\\.]+):([-_A-Za-z0-9\\.]+)")
+        set(_package ${CMAKE_MATCH_1}::${CMAKE_MATCH_2})
+        set(_version ${CMAKE_MATCH_3})
+        _log_debug(calm.cmake "The package ${_package} is fixed to the version ${_version}")
+        _calm_set_managed_version(${_package} ${_version})
+    elseif (_dependency MATCHES "([-_A-Za-z0-9\\.]+):([-_A-Za-z0-9\\.]+)")
+        set(_package ${CMAKE_MATCH_1})
+        set(_version ${CMAKE_MATCH_2})
+        _log_debug(calm.cmake "The package ${_package} is fixed to the version ${_version}")
+        _calm_set_managed_version(${_package} ${_version})
+    else()
+        message(FATAL_ERROR
+                "Change the specification string `${_dependency}` to follow the format <dependency>:<version>")
+    endif()
 endfunction()
 
 ###############################################################################
@@ -46,7 +66,7 @@ endfunction()
 #
 ###############################################################################
 function(_calm_get_managed_version _dependency _out_var)
-    TPA_get(dependencies.management.${_dependency} _version)
+    global_get(calm.cmake dependencies.management.${_dependency} _version)
     set(${_out_var} "${_version}" PARENT_SCOPE)
 endfunction()
 
@@ -64,41 +84,7 @@ endfunction()
 #
 ###############################################################################
 function(_calm_set_managed_version _dependency _version)
-    TPA_set(dependencies.management.${_dependency} ${_version})
-endfunction()
-
-###############################################################################
-#.rst:
-#
-# .. cmake:command:: calm_test_dependencies
-#
-# A helper function to store test dependencies in the current TPA scope.
-# Doesn't configure or load any dependencies itself.
-#
-# .. code-block:: cmake
-#
-#    calm_test_dependencies(<package name> ...)
-#
-###############################################################################
-function(calm_test_dependencies)
-    TPA_append(dependencies.test "${ARGN}")
-endfunction()
-
-###############################################################################
-#.rst:
-#
-# .. cmake:command:: _calm_get_test_dependencies
-#
-# A helper function to retrieve test dependencies from the current TPA scope.
-#
-# .. code-block:: cmake
-#
-#    _calm_get_test_dependencies(<output variable>)
-#
-###############################################################################
-function(_calm_get_test_dependencies _out_var)
-    TPA_get(dependencies.test _dependencies)
-    set(${_out_var} "${_dependencies}" PARENT_SCOPE)
+    global_set(calm.cmake dependencies.management.${_dependency} ${_version})
 endfunction()
 
 ###############################################################################
@@ -115,7 +101,8 @@ endfunction()
 #
 ###############################################################################
 function(_calm_set_cpm_arguments _package)
-    TPA_set(dependencies.cpm.arguments.${_package} "${ARGN}")
+    #log_info(calm.cmake "set CPM arguments to ${ARGN} for ${_package}")
+    global_set(calm.cmake dependencies.cpm.arguments.${_package} "${ARGN}")
 endfunction()
 
 ###############################################################################
@@ -132,6 +119,40 @@ endfunction()
 #
 ###############################################################################
 function(_calm_get_cpm_arguments _package _out_var)
-    TPA_get(dependencies.cpm.arguments.${_package} _arguments)
+    global_get(calm.cmake dependencies.cpm.arguments.${_package} _arguments)
     set(${_out_var} "${_arguments}" PARENT_SCOPE)
+endfunction()
+
+###############################################################################
+#.rst:
+#
+# .. cmake:command:: calm_test_dependencies
+#
+# A helper function to store test dependencies in the current TPA scope.
+# Doesn't configure or load any dependencies itself.
+#
+# .. code-block:: cmake
+#
+#    calm_test_dependencies(<package name> ...)
+#
+###############################################################################
+function(calm_test_dependencies)
+    global_append(calm.cmake dependencies.test "${ARGN}")
+endfunction()
+
+###############################################################################
+#.rst:
+#
+# .. cmake:command:: _calm_get_test_dependencies
+#
+# A helper function to retrieve test dependencies from the current TPA scope.
+#
+# .. code-block:: cmake
+#
+#    _calm_get_test_dependencies(<output variable>)
+#
+###############################################################################
+function(_calm_get_test_dependencies _out_var)
+    global_get(calm.cmake dependencies.test _dependencies)
+    set(${_out_var} "${_dependencies}" PARENT_SCOPE)
 endfunction()

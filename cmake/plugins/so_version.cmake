@@ -1,7 +1,7 @@
 function(_plugin_so_version_manifest)
     _calm_plugin_manifest(so_version
             TARGET_TYPES main
-            REQUIRED
+            OPTIONS SO_VERSION
             DESCRIPTION [=[
 This plugin sets version and SO_VERSION properties from `${PROJECT_VERSION}`.
 ]=])
@@ -23,5 +23,6 @@ function(_plugin_so_version_apply _target)
                     VERSION ${PROJECT_VERSION}
                     SOVERSION ${PROJECT_VERSION})
         endif()
+        log_info(calm.plugins.so_version "${_target}::SOVERSION = ${PROJECT_VERSION}")
     endif()
 endfunction()

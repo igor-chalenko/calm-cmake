@@ -1,5 +1,7 @@
+get_filename_component(_current_dir ${CMAKE_CURRENT_LIST_FILE} PATH)
+
 function(_plugin_sanitizers_manifest)
-    _calm_plugin_manifest(Sanitizers
+    _calm_plugin_manifest(sanitizers
             TARGET_TYPES main test
             OPTIONS
                 SANITIZE_ADDRESS
@@ -39,13 +41,14 @@ function(_plugin_sanitizers_init)
     set(SANITIZE_ADDRESS ON)
     #_calm_find_package(Sanitizers)
 
-    _package_directory(_current_dir)
-    set(_package_dir "${_current_dir}/3rd-party/Sanitizers")
+    #_package_directory(_current_dir)
+    message(STATUS "??? _current_dir = ${_current_dir}")
+    set(_package_dir "${_current_dir}/../3rd-party/Sanitizers")
     if (IS_DIRECTORY "${_package_dir}")
         list(PREPEND CMAKE_MODULE_PATH "${_package_dir}/cmake")
     endif()
 
-    #list(PREPEND CMAKE_MODULE_PATH "${Sanitizers_SOURCE_DIR}/cmake")
+    list(PREPEND CMAKE_MODULE_PATH "${Sanitizers_SOURCE_DIR}/cmake")
     find_package(Sanitizers REQUIRED)
 endfunction()
 
