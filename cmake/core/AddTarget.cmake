@@ -111,7 +111,6 @@ function(_calm_add_target _target _type)
             "${_unique_params}"
             "${_multi_value_args}" ${ARGN})
 
-    message(STATUS "!!!!! ARG_UNPARSED_ARGUMENTS = ${ARG_UNPARSED_ARGUMENTS}")
     if (ARG_UNPARSED_ARGUMENTS)
         # the target specifies some plugin parameter incorrectly
         log_fatal(calm.cmake "Unrecognized arguments: ${ARG_UNPARSED_ARGUMENTS}
@@ -175,6 +174,10 @@ function(_calm_set_target_sources _target _sources)
 endfunction()
 
 function(_calm_set_include_directories _target _type _includes)
+    if (NOT _includes AND EXISTS "${PROJECT_SOURCE_DIR}/include")
+        set(_includes "include")
+    endif ()
+
     assert_not_empty("${_includes}")
     if (${_type} STREQUAL INTERFACE)
         set(_visibility INTERFACE)
@@ -214,6 +217,7 @@ function(_calm_set_include_directories _target _type _includes)
         endif()
     endforeach()
     _calm_target_include_directories(${_target} ${_visibility} "${_amend_includes}")
+    message(STATUS "!!! _all_headers = ${_all_headers}")
     _calm_set_target_properties(${_target}
             PROPERTIES PUBLIC_HEADER "${_all_headers}")
 endfunction()

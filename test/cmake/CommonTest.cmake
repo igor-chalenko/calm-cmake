@@ -1,5 +1,5 @@
 include(${_current_test_dir}/ImportCmakeUtilities.cmake)
-include(${_current_test_dir}/../../cmake/core/Bootstrap.cmake)
+include(${_current_test_dir}/../../cmake/Bootstrap.cmake)
 
 function(mock_add_library _target _type _sources)
     global_set(add.target.${_target} TYPE ${_type})
