@@ -1,6 +1,7 @@
 # calm-cmake
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://app.travis-ci.com/igor-chalenko/calm-cmake.svg?branch=main)](https://app.travis-ci.com/igor-chalenko/calm-cmake)
 
 What is it for ?
 ----------------
