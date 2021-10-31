@@ -52,7 +52,8 @@ function(sanitizer_add_blacklist_file FILE)
         "SanitizerBlacklist" "SanBlist")
 endfunction()
 
-function(add_sanitizers ...)
+function(add_sanitizers)
+    message(STATUS "sanitizers for ${ARGN}")
     # If no sanitizer is enabled, return immediately.
     if (NOT (SANITIZE_ADDRESS OR SANITIZE_MEMORY OR SANITIZE_THREAD OR
         SANITIZE_UNDEFINED))
@@ -60,6 +61,7 @@ function(add_sanitizers ...)
     endif ()
 
     foreach (TARGET ${ARGV})
+        message(STATUS "sanitizers for ${TARGET}")
         # Check if this target will be compiled by exactly one compiler. Other-
         # wise sanitizers can't be used and a warning should be printed once.
         get_target_property(TARGET_TYPE ${TARGET} TYPE)

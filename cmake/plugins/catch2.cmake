@@ -34,6 +34,7 @@ No `test` or `tests` directories found, auto-tests not created. Use
 endfunction()
 
 function(_calm_include_catch)
+    message(STATUS "Catch2_SOURCE_DIR = ${Catch2_SOURCE_DIR}")
     if (Catch2_SOURCE_DIR)
         list(PREPEND CMAKE_MODULE_PATH "${Catch2_SOURCE_DIR}/extras")
     else()
@@ -48,7 +49,7 @@ function(_calm_catch2_tests _for_target _sources _mask)
     cmake_parse_arguments(ARG "" "REPORTER;OUTPUT_DIR" "" ${ARGN})
 
     if (NOT TARGET ${_for_target}.test)
-        add_custom_target(${_for_target}.test
+        _calm_add_custom_target(${_for_target}.test
                 COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                 COMMENT "Build and run all the tests.")
@@ -59,11 +60,11 @@ function(_calm_catch2_tests _for_target _sources _mask)
     set(_test_file_pattern ${_sources})
     # list the test files
     file(GLOB_RECURSE TESTS LIST_DIRECTORIES false ${_test_file_pattern}/${_mask})
-    get_target_property(_type ${_for_target} TYPE)
+    _calm_get_target_property(_type ${_for_target} TYPE)
     if (_type STREQUAL INTERFACE_LIBRARY)
-        get_target_property(_includes ${_for_target} INTERFACE_INCLUDE_DIRECTORIES)
+        _calm_get_target_property(_includes ${_for_target} INTERFACE_INCLUDE_DIRECTORIES)
     else()
-        get_target_property(_includes ${_for_target} INCLUDE_DIRECTORIES)
+        _calm_get_target_property(_includes ${_for_target} INCLUDE_DIRECTORIES)
     endif()
 
     # each found file is a separate test
@@ -78,9 +79,9 @@ function(_calm_catch2_tests _for_target _sources _mask)
                 TEST
                 DEPENDENCIES ${_test_dependencies}
                 ${ARGN})
-        target_link_libraries(${_target} PRIVATE ${_for_target})
+        _calm_target_link_libraries(${_target} PRIVATE ${_for_target})
 
-        add_dependencies(${_for_target}.test ${_target})
+        _calm_add_dependencies(${_for_target}.test ${_target})
     endforeach()
     _calm_include_catch()
     get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
@@ -106,8 +107,12 @@ function(_calm_catch2_tests _for_target _sources _mask)
         if (ARG_OUTPUT_DIR)
             list(APPEND _cmd_line OUTPUT_DIR ${ARG_OUTPUT_DIR})
         endif()
-        catch_discover_tests(${_target} ${_cmd_line})
+        _calm_catch_discover_tests(${_target} "${_cmd_line}")
     endforeach()
+endfunction()
+
+function(_calm_catch_discover_tests _target _cmd_line)
+    catch_discover_tests(${_target} "${_cmd_line}")
 endfunction()
 
 # ===========================================================================
