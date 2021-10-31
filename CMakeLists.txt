@@ -28,11 +28,11 @@ if(PROJECT_IS_TOP_LEVEL)
     include(DynamicFunctions)
     include(Dependency)
 
-    include(cmake/Bootstrap.cmake)
+    include(cmake/core/Bootstrap.cmake)
     include(cmake/3rd-party/ycm/modules/InstallBasicPackageFiles.cmake)
 
-    #add_subdirectory(test)
-    add_subdirectory(i18n)
+    add_subdirectory(test)
+    #add_subdirectory(i18n)
     #if (CALM_CMAKE_BUILD_TESTS)
     #endif()
 

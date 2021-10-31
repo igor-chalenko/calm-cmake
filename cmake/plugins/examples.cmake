@@ -40,11 +40,11 @@ function(_calm_examples _for_target _sources _mask)
         # list the test files
         file(GLOB_RECURSE TESTS LIST_DIRECTORIES false ${_test_file_pattern})
         if (TESTS)
-            get_target_property(_type ${_for_target} TYPE)
+            _calm_get_target_property(_type ${_for_target} TYPE)
             if (_type STREQUAL INTERFACE_LIBRARY)
-                get_target_property(_includes ${_for_target} INTERFACE_INCLUDE_DIRECTORIES)
+                _calm_get_target_property(_includes ${_for_target} INTERFACE_INCLUDE_DIRECTORIES)
             else()
-                get_target_property(_includes ${_for_target} INCLUDE_DIRECTORIES)
+                _calm_get_target_property(_includes ${_for_target} INCLUDE_DIRECTORIES)
             endif()
 
             foreach (_file IN LISTS TESTS)
@@ -55,7 +55,7 @@ function(_calm_examples _for_target _sources _mask)
                         TEST
                         DEPENDENCIES ${_test_dependencies}
                         ${ARGN})
-                target_link_libraries(${_target} PRIVATE ${_for_target})
+                _calm_target_link_libraries(${_target} PRIVATE ${_for_target})
                 log_info(calm.plugins.examples "Added the example ${_target} (${_file})")
 
                 #add_test(${_target} ${_target})
@@ -75,6 +75,7 @@ endfunction()
 # source file relative from the source directory is `path/to/source/file.ext`,
 # the target name associated to it will be `path.to.source.file`.
 function(_calm_example_name_for_file _file _prefix _out_var)
+    message(STATUS "CMAKE_CURRENT_SOURCE_DIR = ${CMAKE_CURRENT_SOURCE_DIR}")
     file(RELATIVE_PATH _relative ${CMAKE_CURRENT_SOURCE_DIR} ${_file})
     string(REGEX REPLACE "^(.*)\\.(.*)$" "\\1" _name ${_relative})
     string(REGEX REPLACE "/" "." _name ${_name})

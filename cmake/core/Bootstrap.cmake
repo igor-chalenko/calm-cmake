@@ -88,8 +88,9 @@ endif()
 get_filename_component(_current_dir ${CMAKE_CURRENT_LIST_FILE} PATH)
 set_property(GLOBAL PROPERTY _CURRENT_CMAKE_DIR "${_current_dir}")
 
-include("${_current_dir}/core/AddTarget.cmake")
-include("${_current_dir}/core/DependencyManagement.cmake")
-include("${_current_dir}/core/Plugin.cmake")
+include("${_current_dir}/overridable.cmake")
+include("${_current_dir}/AddTarget.cmake")
+include("${_current_dir}/DependencyManagement.cmake")
+include("${_current_dir}/Plugin.cmake")
 
 

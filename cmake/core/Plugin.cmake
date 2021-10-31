@@ -36,12 +36,12 @@ macro(_calm_plugin _plugin)
         set(_include_file ${_current_dir}/${_suffix})
     endif ()
     if (NOT EXISTS ${_include_file})
-        set(_locations [[
+        set(_locations "
 Searched in:
 1) ${PROJECT_SOURCE_DIR}/cmake/plugins
 2) ${CMAKE_SOURCE_DIR}/cmake/plugins
-3) ${_current_cmake_dir}/plugins
-]]
+3) ${_current_dir}/plugins
+"
                 )
         message(SEND_ERROR "Plugin `${_plugin}` not found.\n${_locations}")
     endif ()
