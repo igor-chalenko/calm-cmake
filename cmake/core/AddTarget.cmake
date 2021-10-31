@@ -111,13 +111,15 @@ function(_calm_add_target _target _type)
             "${_unique_params}"
             "${_multi_value_args}" ${ARGN})
 
+    message(STATUS "!!!!! ARG_UNPARSED_ARGUMENTS = ${ARG_UNPARSED_ARGUMENTS}")
     if (ARG_UNPARSED_ARGUMENTS)
         # the target specifies some plugin parameter incorrectly
-        message(STATUS "ARGN is: ${ARGN}")
-        message(STATUS "Parameters were: ${_unique_params}")
-        message(STATUS "Options were: ${_unique_options}")
-        message(STATUS "Multi-value parameters were: ${_multi_value_args}")
-        message(FATAL_ERROR "Unrecognized arguments: ${ARG_UNPARSED_ARGUMENTS}")
+        log_fatal(calm.cmake "Unrecognized arguments: ${ARG_UNPARSED_ARGUMENTS}
+ARGN is: ${ARGN}
+Options: ${_unique_options}
+Parameters: ${_unique_params}
+Multi-value parameters: ${_multi_value_args}
+")
     endif ()
 
     if (ARG_TEST)
@@ -201,7 +203,7 @@ function(_calm_set_include_directories _target _type _includes)
 
         if (IS_ABSOLUTE "${_include}")
             file(RELATIVE_PATH _relative_include "${PROJECT_SOURCE_DIR}" "${_include}")
-            message(STATUS "converted absolute ${_include} to ${_relative_include}")
+            log_info(calm.cmake "converted absolute INCLUDE path ${_include} to ${_relative_include}")
             set(_include "${_relative_include}")
         endif()
         if (NOT _ind GREATER -1)
@@ -217,7 +219,6 @@ function(_calm_set_include_directories _target _type _includes)
 endfunction()
 
 function(_calm_set_dependencies _target)
-    message(STATUS "!!! _calm_set_dependencies(${_target})")
     unset(_targets)
     foreach (_dep ${ARGN})
         if (NOT TARGET ${_dep})
@@ -229,7 +230,6 @@ function(_calm_set_dependencies _target)
     if (${_type} STREQUAL INTERFACE_LIBRARY)
         _calm_target_link_libraries(${_target} INTERFACE ${_targets})
     else()
-        message(STATUS "_calm_target_link_libraries(${_target} PUBLIC ${_targets})")
         _calm_target_link_libraries(${_target} PUBLIC ${_targets})
     endif()
 endfunction()

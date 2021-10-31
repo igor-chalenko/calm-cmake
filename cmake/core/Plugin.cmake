@@ -47,7 +47,7 @@ Searched in:
     endif ()
     include(${_include_file})
     dynamic_call(_plugin_${_plugin}_init)
-    message(STATUS "The plugin `${_plugin}` initialized")
+    log_info(calm.plugins "The plugin `${_plugin}` initialized")
 endmacro()
 
 function(calm_optional_plugin _name)

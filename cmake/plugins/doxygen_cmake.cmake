@@ -10,13 +10,10 @@ endmacro()
 
 function(_plugin_doxygen_cmake_manifest)
     _calm_plugin_manifest(doxygen_cmake
-            CPM_ARGUMENTS
-                GITHUB_REPOSITORY igor-chalenko/doxygen-cmake
-                GIT_TAG master
             TARGET_TYPES main
             OPTIONS DOXYGEN
             PARAMETERS DOXYGEN_ARGS
-            DESCRIPTION "This plugin enables docs generation via `Doxygen`."
+            DESCRIPTION "This plugin enables docs generation via `Doxygen`"
             )
 endfunction()
 
