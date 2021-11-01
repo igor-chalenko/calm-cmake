@@ -2,8 +2,7 @@ macro(_doxygen_find_package)
     _calm_find_package(doxygen_cmake
             CPM_ARGUMENTS
                 GITHUB_REPOSITORY igor-chalenko/doxygen-cmake
-                GIT_TAG master
-            FIND_PACKAGE_ARGUMENTS REQUIRED)
+                GIT_TAG master)
     message(STATUS "!!! doxygen_cmake_SOURCE_DIR = ${doxygen_cmake_SOURCE_DIR}")
     include("${doxygen_cmake_SOURCE_DIR}/cmake/add-doxygen-targets.cmake")
 endmacro()

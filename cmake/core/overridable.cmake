@@ -31,6 +31,10 @@ function(_calm_target_compile_options _target _visibility)
     target_compile_options(${_target} ${_visibility} ${ARGN})
 endfunction()
 
+function(_calm_target_link_options  _target _visibility)
+    target_link_options(${_target} ${_visibility} ${ARGN})
+endfunction()
+
 function(_calm_add_custom_target _target)
     add_custom_target(${_target} ${ARGN})
 endfunction()

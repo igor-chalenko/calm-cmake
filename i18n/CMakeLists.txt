@@ -29,7 +29,7 @@ calm_optional_plugin(doxygen_cmake)
 #calm_optional_plugin(sanitizers ENABLED_WHEN "${CMAKE_CXX_COMPILER} STREQUAL GNU")
 #calm_optional_plugin(coverage ENABLED_BY I18N_COVERAGE)
 
-set(SANITIZE_ADDRESS ON)
+#set(SANITIZE_ADDRESS ON)
 calm_test_dependencies(Catch2::Catch2WithMain Boost::filesystem)
 
 calm_add_library(${PROJECT_NAME}

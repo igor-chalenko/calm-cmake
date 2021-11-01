@@ -69,6 +69,9 @@ function(_calm_target_sources _target)
     endif()
 endfunction()
 
+function(_calm_target_link_options  _target _visibility)
+endfunction()
+
 function(_calm_add_library _target)
     cmake_parse_arguments(ARG "INTERFACE" "" "" ${ARGN})
     if (ARG_INTERFACE)
