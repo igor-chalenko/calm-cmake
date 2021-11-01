@@ -28,7 +28,7 @@ if(PROJECT_IS_TOP_LEVEL)
     include(DynamicFunctions)
     include(Dependency)
 
-    include(cmake/core/Bootstrap.cmake)
+    include(cmake/Bootstrap.cmake)
     include(cmake/3rd-party/ycm/modules/InstallBasicPackageFiles.cmake)
 
     add_subdirectory(test)

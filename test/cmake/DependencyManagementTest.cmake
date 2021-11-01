@@ -15,10 +15,6 @@ function(dependency_test)
     _calm_set_managed_version(Boost boost-1.78.0)
     _calm_get_managed_version(Boost _version)
     assert_same(${_version} "boost-1.78.0")
-
-    _calm_set_cpm_arguments(package_name arg1 arg2)
-    _calm_get_cpm_arguments(package_name _args)
-    assert_same("${_args}" "arg1;arg2")
 endfunction()
 
 get_filename_component(_current_test_dir ${CMAKE_CURRENT_LIST_FILE} PATH)

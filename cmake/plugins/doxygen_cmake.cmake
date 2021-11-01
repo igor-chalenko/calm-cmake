@@ -2,26 +2,22 @@ macro(_doxygen_find_package)
     _calm_find_package(doxygen_cmake
             CPM_ARGUMENTS
                 GITHUB_REPOSITORY igor-chalenko/doxygen-cmake
-                GIT_TAG master
-            QUIET)
+                GIT_TAG master)
     message(STATUS "!!! doxygen_cmake_SOURCE_DIR = ${doxygen_cmake_SOURCE_DIR}")
     include("${doxygen_cmake_SOURCE_DIR}/cmake/add-doxygen-targets.cmake")
 endmacro()
 
 function(_plugin_doxygen_cmake_manifest)
     _calm_plugin_manifest(doxygen_cmake
-            CPM_ARGUMENTS
-                GITHUB_REPOSITORY igor-chalenko/doxygen-cmake
-                GIT_TAG master
             TARGET_TYPES main
             OPTIONS DOXYGEN
             PARAMETERS DOXYGEN_ARGS
-            DESCRIPTION "This plugin enables docs generation via `Doxygen`."
+            DESCRIPTION "This plugin enables docs generation via `Doxygen`"
             )
 endfunction()
 
 function(_plugin_doxygen_cmake_init)
-    _calm_find_package(doxygen_cmake QUIET)
+    _doxygen_find_package(doxygen_cmake)
     if (DEFINED doxygen-cmake_SOURCE_DIR)
         set(DOXYGEN_CMAKE_MODULE_DIR "${doxygen-cmake_SOURCE_DIR}/cmake")
         set(PACKAGE_PREFIX_DIR "${doxygen-cmake_SOURCE_DIR}/cmake")
@@ -35,6 +31,5 @@ function(_plugin_doxygen_cmake_init)
 endfunction()
 
 function(_plugin_doxygen_cmake_apply _target)
-    _doxygen_find_package(doxygen_cmake REQUIRED)
     add_doxygen_targets(INPUT_TARGET ${_target} ${ARGN})
 endfunction()

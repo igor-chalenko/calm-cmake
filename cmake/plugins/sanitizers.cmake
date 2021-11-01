@@ -8,10 +8,6 @@ function(_plugin_sanitizers_manifest)
                 SANITIZE_MEMORY
                 SANITIZE_THREAD
                 SANITIZE_UNDEFINED
-            CPM_ARGUMENTS
-                GITHUB_REPOSITORY arsenm/sanitizers-cmake
-                GIT_TAG master
-                DOWNLOAD_ONLY TRUE
             DESCRIPTION [=[
 Plugin `Sanitizers` enables sanitizers for the requested targets. The following
 parameters are injected into _calm_add_(library|executable):

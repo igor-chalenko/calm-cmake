@@ -34,8 +34,8 @@ endfunction()
 get_filename_component(_current_test_dir ${CMAKE_CURRENT_LIST_FILE} PATH)
 include(${_current_test_dir}/CommonTest.cmake)
 
-add_dependencies_test()
-set_include_directories_test()
-set_target_sources_test()
+#add_dependencies_test()
+#set_include_directories_test()
+#set_target_sources_test()
 
 add_target_test()
