@@ -84,12 +84,11 @@ endfunction()
 function(_calm_plugin_manifest _plugin)
     set(_options PROJECT_WIDE)
     set(_one_value_args DESCRIPTION)
-    set(_multi_value_args TARGET_TYPES PARAMETERS OPTIONS CPM_ARGUMENTS)
+    set(_multi_value_args TARGET_TYPES PARAMETERS OPTIONS)
 
     unset(ARG_TARGET_TYPES)
     unset(ARG_PARAMETERS)
     unset(ARG_OPTIONS)
-    unset(ARG_CPM_ARGUMENTS)
     cmake_parse_arguments(ARG
             "${_options}" "${_one_value_args}" "${_multi_value_args}" ${ARGN})
 
@@ -98,9 +97,6 @@ function(_calm_plugin_manifest _plugin)
     _calm_set_plugin_parameters(${_plugin} "${ARG_PARAMETERS}")
     _calm_set_plugin_options(${_plugin} "${ARG_OPTIONS}")
     _calm_set_plugin_project_wide(${_plugin} "${ARG_PROJECT_WIDE}")
-    if (ARG_CPM_ARGUMENTS)
-        _calm_set_cpm_arguments(${_plugin} "${ARG_CPM_ARGUMENTS}")
-    endif ()
 
     _calm_get_plugin_parameters(${_plugin} _parameters)
     _calm_get_plugin_options(${_plugin} _options)

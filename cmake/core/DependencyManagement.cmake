@@ -90,42 +90,6 @@ endfunction()
 ###############################################################################
 #.rst:
 #
-# .. cmake:command:: _calm_set_cpm_arguments
-#
-# A helper function to store CPM arguments of a given downloadable package in
-# the current TPA scope.
-#
-# .. code-block:: cmake
-#
-#    _calm_set_cpm_arguments(<package name> <ARGN>)
-#
-###############################################################################
-function(_calm_set_cpm_arguments _package)
-    #log_info(calm.cmake "set CPM arguments to ${ARGN} for ${_package}")
-    global_set(calm.cmake dependencies.cpm.arguments.${_package} "${ARGN}")
-endfunction()
-
-###############################################################################
-#.rst:
-#
-# .. cmake:command:: _calm_get_cpm_arguments
-#
-# A helper function to retrieve CPM arguments of a given downloadable package
-# from the current TPA scope.
-#
-# .. code-block:: cmake
-#
-#    _calm_get_cpm_arguments(<package name> <output variable>)
-#
-###############################################################################
-function(_calm_get_cpm_arguments _package _out_var)
-    global_get(calm.cmake dependencies.cpm.arguments.${_package} _arguments)
-    set(${_out_var} "${_arguments}" PARENT_SCOPE)
-endfunction()
-
-###############################################################################
-#.rst:
-#
 # .. cmake:command:: calm_test_dependencies
 #
 # A helper function to store test dependencies in the current TPA scope.

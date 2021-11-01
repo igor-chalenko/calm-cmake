@@ -1,12 +1,10 @@
 find_package(Threads)
 
-get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
-if (_cpm_initialized)
-    _calm_set_cpm_arguments(GTest
-            GITHUB_REPOSITORY google/googletest
-            GIT_TAG ${_git_tag})
-endif()
-_calm_find_package(GTest REQUIRED)
+_calm_find_package(GTest
+            CPM_ARGUMENTS
+                GITHUB_REPOSITORY google/googletest
+                GIT_TAG ${_git_tag}
+            )
 if (NOT TARGET GTest::gtest)
     add_library(gtest_imported INTERFACE IMPORTED GLOBAL)
     add_library(GTest::gtest ALIAS gtest_imported)
