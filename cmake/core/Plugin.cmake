@@ -27,6 +27,7 @@ macro(calm_plugins)
 endmacro()
 
 macro(_calm_plugin _plugin)
+    get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
     set(_suffix "plugins/${_plugin}.cmake")
     set(_include_file ${PROJECT_SOURCE_DIR}/cmake/${_suffix})
     if (NOT EXISTS ${_include_file})
@@ -40,10 +41,10 @@ macro(_calm_plugin _plugin)
 Searched in:
 1) ${PROJECT_SOURCE_DIR}/cmake/plugins
 2) ${CMAKE_SOURCE_DIR}/cmake/plugins
-3) ${_current_dir}/plugins
+3) ${_current_dir}
 "
                 )
-        message(SEND_ERROR "Plugin `${_plugin}` not found.\n${_locations}")
+        message(FATAL_ERROR "Plugin `${_plugin}` not found.\n${_locations}")
     endif ()
     include(${_include_file})
     dynamic_call(_plugin_${_plugin}_init)

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.17)
-project(calm-cmake LANGUAGES CXX VERSION 1.0
+project(CalmCMake LANGUAGES CXX VERSION 1.0
         DESCRIPTION "CMake project template for calm development")
 
 include(CMakeDependentOption)
@@ -46,7 +46,6 @@ if(PROJECT_IS_TOP_LEVEL)
             COMPATIBILITY AnyNewerVersion
             ARCH_INDEPENDENT
             NO_EXPORT
-            LOWERCASE_FILENAMES
             EXTRA_PATH_VARS_SUFFIX MODULE_DIR
             NO_CHECK_REQUIRED_COMPONENTS_MACRO)
 

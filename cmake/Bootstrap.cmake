@@ -41,7 +41,7 @@ macro(_calm_find_package _name)
             endif()
         endif()
     else()
-        find_package(${_name} ${ARGN})
+        find_package(${_name})
     endif()
 endmacro()
 

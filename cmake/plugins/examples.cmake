@@ -20,9 +20,9 @@ function(_plugin_examples_apply _target)
         endif()
         _calm_examples(${_target} "${ARG_EXAMPLE_PATH}" "*" ${ARGN})
     elseif (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/example")
-        _calm_examples(${_target} "example" "*" ${ARGN})
+        _calm_examples(${_target} "${PROJECT_SOURCE_DIR}/example" "*" ${ARGN})
     elseif (IS_DIRECTORY "${PROJECT_SOURCE_DIR}/examples")
-        _calm_examples(${_target} "examples" "*" ${ARGN})
+        _calm_examples(${_target} "${PROJECT_SOURCE_DIR}/examples" "*" ${ARGN})
     else()
         message(STATUS [[
 No `example` or `examples` directories found, `examples` target was not created. Use
@@ -32,7 +32,8 @@ No `example` or `examples` directories found, `examples` target was not created.
 endfunction()
 
 function(_calm_examples _for_target _sources _mask)
-    if (EXISTS ${_sources})
+    log_debug(calm.plugins.examples "Example source: `${_sources}`")
+    if (EXISTS "${_sources}")
         log_debug(calm.plugins.examples "Searching example sources under `${_sources}`")
 
         set(_target_prefix "${_for_target}.")

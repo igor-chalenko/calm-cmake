@@ -32,23 +32,16 @@ function(_calm_init_library _lib_name)
             endif()
         endforeach()
     else()
-        find_package(Boost REQUIRED COMPONENTS ${_alt_lib_name})
-        if (NOT TARGET ${_lib_name})
-            if (_type STREQUAL INTERFACE_LIBRARY)
-                calm_add_library(boost_${_lib_name} INTERFACE
-                        INCLUDES $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}/include>;$<INSTALL_INTERFACE:include>
-                        DEPENDENCIES ${_deps}
-                        NAMESPACE Boost
-                        EXPORT_NAME ${_lib_name}
-                        )
-                else()
-                calm_add_library(boost_${_lib_name}
-                        INCLUDES $<BUILD_INTERFACE:${Boost_INCLUDE_DIRS}/include>;$<INSTALL_INTERFACE:include>
-                        DEPENDENCIES ${_deps}
-                        NAMESPACE Boost
-                        EXPORT_NAME ${_lib_name}
-                        )
-                endif()
+        if (_alt_lib_name STREQUAL headers)
+            if (NOT Boost_FOUND)
+                find_package(Boost)
+                add_library(Boost::${_lib_name} ALIAS Boost::boost)
+            endif()
+        else()
+            find_package(Boost REQUIRED COMPONENTS ${_alt_lib_name})
+            if (NOT TARGET Boost::${_lib_name})
+                add_library(Boost::${_lib_name} ALIAS boost_${_lib_name})
+            endif()
         endif()
     endif()
 endfunction()

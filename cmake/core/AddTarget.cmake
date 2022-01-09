@@ -217,7 +217,7 @@ function(_calm_set_include_directories _target _type _includes)
         endif()
     endforeach()
     _calm_target_include_directories(${_target} ${_visibility} "${_amend_includes}")
-    message(STATUS "!!! _all_headers = ${_all_headers}")
+    #message(STATUS "!!! _all_headers = ${_all_headers}")
     _calm_set_target_properties(${_target}
             PROPERTIES PUBLIC_HEADER "${_all_headers}")
 endfunction()
