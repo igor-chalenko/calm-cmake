@@ -47,8 +47,8 @@ function(_calm_project_dependency _dependency)
         log_debug(calm.cmake "The package ${_package} is fixed to the version ${_version}")
         _calm_set_managed_version(${_package} ${_version})
     else()
-        message(FATAL_ERROR
-                "Change the specification string `${_dependency}` to follow the format <dependency>:<version>")
+        message(FATAL_ERROR "Change the specification string `${_dependency}` to follow the format
+                             <dependency>:<version>")
     endif()
 endfunction()
 
