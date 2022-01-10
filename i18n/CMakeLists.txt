@@ -16,7 +16,6 @@ calm_project_dependencies(
 )
 
 log_level(calm DEBUG)
-log_level(doxygen TRACE)
 
 calm_plugins(catch2
             coverage
@@ -25,7 +24,7 @@ calm_plugins(catch2
             sanitizers
             examples)
 
-calm_optional_plugin(doxygen_cmake)
+#calm_optional_plugin(doxygen_cmake)
 #calm_optional_plugin(sanitizers ENABLED_WHEN "${CMAKE_CXX_COMPILER} STREQUAL GNU")
 #calm_optional_plugin(coverage ENABLED_BY I18N_COVERAGE)
 
@@ -33,15 +32,15 @@ calm_optional_plugin(doxygen_cmake)
 calm_test_dependencies(Catch2::Catch2WithMain Boost::filesystem)
 
 calm_add_library(${PROJECT_NAME}
-        SOURCES ${PROJECT_SOURCE_DIR}/src
         COVERAGE
         SANITIZE_ADDRESS
         CATCH2
         EXAMPLES
         EXAMPLE_PATH example
         #GTEST
-        DOXYGEN_ARGS PROJECT_NAME ${PROJECT_NAME}
+        # DOXYGEN_ARGS PROJECT_NAME ${PROJECT_NAME}
         #INSTALL
+        SOURCES "${PROJECT_SOURCE_DIR}/src"
         DEPENDENCIES fmt::fmt Boost::system Boost::filesystem Boost::spirit)
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC BOOST_NO_CXX11_SCOPED_ENUMS=1)

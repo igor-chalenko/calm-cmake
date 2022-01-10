@@ -82,6 +82,9 @@ function(_calm_add_target _target _type)
     global_get(calm.cmake "plugins.parameters" _all_parameters)
     global_get(calm.cmake "plugins.options" _all_options)
 
+    message(STATUS "_all_parameters = ${_all_parameters}")
+    message(STATUS "_plugins = ${_plugins}")
+
     set(_options ${_all_options} INTERFACE TEST)
     set(_one_value_args "EXPORT_NAME")
     set(_multi_value_args ${_all_parameters} INCLUDES SOURCES DEPENDENCIES)

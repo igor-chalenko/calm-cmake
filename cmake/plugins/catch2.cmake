@@ -33,19 +33,9 @@ No `test` or `tests` directories found, auto-tests not created. Use
     endif()
 endfunction()
 
-function(_calm_include_catch)
-    message(STATUS "Catch2_SOURCE_DIR = ${Catch2_SOURCE_DIR}")
-    if (Catch2_SOURCE_DIR)
-        list(PREPEND CMAKE_MODULE_PATH "${Catch2_SOURCE_DIR}/extras")
-    else()
-        find_package(Catch2 REQUIRED)
-        list(PREPEND CMAKE_MODULE_PATH "${Catch2_DIR}")
-    endif()
-    include(Catch)
-    include(ParseAndAddCatchTests)
-endfunction()
-
 function(_calm_catch2_tests _for_target _sources _mask)
+    get_property(_current_dir GLOBAL PROPERTY _CURRENT_CMAKE_DIR)
+
     cmake_parse_arguments(ARG "" "REPORTER;OUTPUT_DIR" "" ${ARGN})
 
     if (NOT TARGET ${_for_target}.test)
@@ -80,40 +70,25 @@ function(_calm_catch2_tests _for_target _sources _mask)
                 DEPENDENCIES ${_test_dependencies}
                 ${ARGN})
         _calm_target_link_libraries(${_target} PRIVATE ${_for_target})
+        add_custom_target(${_target}.postprocess
+                COMMAND ${CMAKE_COMMAND}
+                            -Dtarget=${_target}
+                            -DCatch2_SOURCE_DIR="${Catch2_SOURCE_DIR}"
+                            -DCatch2_DIR="${Catch2_DIR}"
+                            -P "${_current_dir}/catch2.discover.tests.cmake" EXCLUDE_FROM_ALL)
+        _calm_catch_discover_tests(${_target} "${_cmd_line}")
 
         _calm_add_dependencies(${_for_target}.test ${_target})
     endforeach()
-    _calm_include_catch()
-    get_property(_cpm_initialized GLOBAL PROPERTY CPM_INITIALIZED)
-    if (_cpm_initialized)
-        if (NOT DEFINED _CATCH_DISCOVER_TESTS_SCRIPT)
-            set(_CATCH_DISCOVER_TESTS_SCRIPT
-                    ${Catch2_SOURCE_DIR}/extras/CatchAddTests.cmake
-                    )
-        endif()
-    else()
-        if (NOT DEFINED _CATCH_DISCOVER_TESTS_SCRIPT)
-            set(_CATCH_DISCOVER_TESTS_SCRIPT
-                    ${Catch2_DIR}/CatchAddTests.cmake
-                    )
-        endif()
+    unset(_cmd_line)
+    if (ARG_REPORTER)
+        list(APPEND _cmd_line REPORTER ${ARG_REPORTER})
     endif()
-    foreach (_file IN LISTS TESTS)
-        _calm_test_name_for_file(${_file} ${_target_prefix} _target)
-        unset(_cmd_line)
-        if (ARG_REPORTER)
-            list(APPEND _cmd_line REPORTER ${ARG_REPORTER})
-        endif()
-        if (ARG_OUTPUT_DIR)
-            list(APPEND _cmd_line OUTPUT_DIR ${ARG_OUTPUT_DIR})
-        endif()
-        _calm_catch_discover_tests(${_target} "${_cmd_line}")
-    endforeach()
+    if (ARG_OUTPUT_DIR)
+        list(APPEND _cmd_line OUTPUT_DIR ${ARG_OUTPUT_DIR})
+    endif()
 endfunction()
 
-function(_calm_catch_discover_tests _target _cmd_line)
-    catch_discover_tests(${_target} "${_cmd_line}")
-endfunction()
 
 # ===========================================================================
 # _calm_test_name_for_file(<output variable> <source file> [ext])
