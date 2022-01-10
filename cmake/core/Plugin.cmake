@@ -214,7 +214,7 @@ endfunction()
 get_filename_component(_current_dir ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 foreach (_plugin_dir "${_current_dir}" "${PROJECT_SOURCE_DIR}" "${CMAKE_SOURCE_DIR}")
-    file(GLOB_RECURSE _files ${_plugin_dir}/../plugins/*.cmake)
+    file(GLOB _files ${_plugin_dir}/../plugins/*.cmake)
     foreach (_file ${_files})
         include(${_file})
         get_filename_component(_name ${_file} NAME_WLE)

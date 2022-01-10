@@ -9,7 +9,7 @@ enable_testing()
 set(I18N_COVERAGE ON)
 calm_project_dependencies(
         MAIN
-            Boost:boost-1.77.0
+            Boost:boost-1.78.0
         TEST
             Catch2::Catch2WithMain:devel
             GTest:release-1.10.0
@@ -35,6 +35,8 @@ calm_add_library(${PROJECT_NAME}
         COVERAGE
         SANITIZE_ADDRESS
         CATCH2
+          REPORTER SonarQube
+          OUTPUT_DIR bed
         EXAMPLES
         EXAMPLE_PATH example
         #GTEST
